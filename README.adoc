@@ -1,0 +1,34 @@
+= OpenShift Pipelines
+Álvaro López Medina <alopezme@redhat.com>
+v1.0, 2023-03
+// Metadata
+:description: This repository contains resources to deploy and test Openshift Pipelines
+:keywords: openshift, pipelines, tekton, ci, red hat
+// Create TOC wherever needed
+:toc: macro
+:sectanchors:
+:sectnumlevels: 2
+:sectnums: 
+:source-highlighter: pygments
+:imagesdir: images
+// Start: Enable admonition icons
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+ifndef::env-github[]
+:icons: font
+endif::[]
+
+This repository contains resources to deploy and practice Openshift Pipelines.
+
+// Create the Table of contents here
+toc::[]
+
+== Introduction
+
+*Red Hat OpenShift Pipelines* is a cloud-native, continuous integration and continuous delivery (CI/CD) solution based on Kubernetes resources. It uses Tekton building blocks to automate deployments across multiple platforms by abstracting away the underlying implementation details. 
+
