@@ -35,25 +35,30 @@ toc::[]
 To get more details, you can check the https://docs.openshift.com/container-platform/4.12/cicd/pipelines/understanding-openshift-pipelines.html[official documentation].
 
 
-== Installation
+== Installation of the operator
 
 Installing the operator is as easy as creating a Subscription in the project `openshift-operators`. The Pipelines Operator is installed for All namespaces: 
 
 [source, bash]
 ----
-oc apply -f ocp-pipelines/01-subscription.yaml
+oc apply -f 00-installation/1-subscription.yaml
 ----
 
 In order to split the pipelines executing from the operator itself, we will create another namespace where the pipelines will be executed:
 
 [source, bash]
 ----
-cat ocp-pipelines/02-project-template.yaml | \
+cat 00-installation/2-project-template.yaml | \
 PIPELINES_PROJECT=pipelines-test \
-envsubst > ocp-pipelines/02-project.yaml
+envsubst > 00-installation/2-project.yaml
 
-oc apply -f ocp-pipelines/02-project.yaml
+oc apply -f 00-installation/2-project.yaml
 ----
+
+
+
+
+
 
 
 
