@@ -87,10 +87,35 @@ oc apply -f 10-tasks/1-list-files.yaml
 
 In many practical use cases, you might need to pull from private Git repositories or might need to push to an external container registry such as Quay.io. In this section, we will summarize how to create the `Secrets` to configure all the credentials.
 
-=== Red Hat registry
+=== Red Hat Registry
 
+To use the `registry.redhat.io` registry, you have to have a Red Hat login. To consume container images from registry.redhat.io in shared environments such as OpenShift, it is recommended for an administrator to use a Registry Service Account, also referred to as authentication tokens, in place of an individual's Customer Portal credentials.
+
+The management of Service Accounts is available via the https://access.redhat.com/terms-based-registry/#/[Registry Service Account management application].
+
+
+[source, yaml]
+----
+apiVersion: v1
+kind: Secret
+metadata:
+  name: <SECRET_NAME>
+data:
+  .dockerconfigjson: <DOCKER_CONFIG_FILE_CONTENT>
+type: kubernetes.io/dockerconfigjson
+----
+
+Once you create the file with its contents, you can apply it to the cluster like this:
+[source, bash]
+----
+oc apply -n pipelines-test -f secrets/rh-registry-sa.yaml
+----
+
+For more information, check the full https://access.redhat.com/RegistryAuthentication[KCS article].
 
 === Git repository
+
+
 
 
 === Quay Robot Account
