@@ -79,6 +79,33 @@ oc apply -f 10-tasks/1-list-files.yaml
 ----
 
 
+== Creating pipelines
+
+.*Copy images from one repo to another*
+[source, bash]
+----
+cat 20-pipelines/1-copy-images-template.yaml | \
+PIPELINES_PROJECT=pipelines-test \
+envsubst > 20-pipelines/1-copy-images.yaml
+
+oc apply -f 20-pipelines/1-copy-images.yaml
+----
+
+
+
+== Running pipelines
+
+.*Copy images from one repo to another*
+[source, bash]
+----
+cat 30-pipelineruns/1-copy-images-template.yaml | \
+PIPELINES_PROJECT=pipelines-test \
+envsubst > 30-pipelineruns/1-copy-images.yaml
+
+oc create -f 30-pipelineruns/1-copy-images.yaml
+----
+
+
 
 
 
@@ -109,6 +136,7 @@ Once you create the file with its contents, you can apply it to the cluster like
 [source, bash]
 ----
 oc apply -n pipelines-test -f secrets/rh-registry-sa.yaml
+oc secrets link -n pipelines-test pipeline rh-registry-sa
 ----
 
 For more information, check the full https://access.redhat.com/RegistryAuthentication[KCS article].
@@ -151,6 +179,8 @@ Once you create the file with its contents, you can apply it to the cluster like
 [source, bash]
 ----
 oc apply -n pipelines-test -f secrets/quay-alopezme-pull-secret.yaml
+oc secrets link -n pipelines-test pipeline quay-alopezme-pull-secret
+
 ----
 
 For more information, you can access the https://access.redhat.com/documentation/en-us/red_hat_quay/3.8/html/use_red_hat_quay/use-quay-manage-repo[documentation] of the on-premise installation of Quay.
