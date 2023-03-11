@@ -32,6 +32,13 @@ toc::[]
 
 *Red Hat OpenShift Pipelines* is a cloud-native, continuous integration and continuous delivery (CI/CD) solution based on Kubernetes resources. It uses Tekton building blocks to automate deployments across multiple platforms by abstracting away the underlying implementation details. 
 
+**What do we understand as Cloud Native CI/CD?**
+
+* *Containers*: Built for container apps and runs on Kubernetes.
+* *Serverless*: Runs serverless with no CI/CD engine to manage and maintain.
+* *DevOps*: Designed with microservices and distributed teams in mind.
+
+
 To get more details, you can check the https://docs.openshift.com/container-platform/4.12/cicd/pipelines/understanding-openshift-pipelines.html[official documentation].
 
 
@@ -61,7 +68,7 @@ oc apply -f 00-installation/2-project.yaml
 This section contains several tasks that can be useful for the pipelines. 
 
 
-.List files in the workspace
+.*List files in the workspace*
 [source, bash]
 ----
 cat 10-tasks/1-list-files-template.yaml | \
@@ -76,7 +83,27 @@ oc apply -f 10-tasks/1-list-files.yaml
 
 
 
-== Annex: Tutorial
+== Secrets for authentication
+
+In many practical use cases, you might need to pull from private Git repositories or might need to push to an external container registry such as Quay.io. In this section, we will summarize how to create the `Secrets` to configure all the credentials.
+
+=== Red Hat registry
+
+
+=== Git repository
+
+
+=== Quay Robot Account
+
+
+
+
+
+
+
+
+:sectnums!:
+== Annex A: Tutorial
 
 If you want a tutorial to learn Openshift Pipelines, I recommend you this https://redhat-scholars.github.io/tekton-tutorial/tekton-tutorial/index.html[tutorial] from Red Hat Scholars.
 
