@@ -1,0 +1,8 @@
+---
+apiVersion: project.openshift.io/v1
+kind: Project
+metadata:
+  name: pipelines-test
+  annotations:
+    openshift.io/description: "Openshift Pipelines namespace"
+    openshift.io/display-name: "Openshift pipelines-test"
