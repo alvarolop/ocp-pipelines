@@ -76,3 +76,7 @@ oc apply -f 10-tasks/1-list-files.yaml
 
 
 
+== Annex: Tutorial
+
+If you want a tutorial to learn Openshift Pipelines, I recommend you this https://redhat-scholars.github.io/tekton-tutorial/tekton-tutorial/index.html[tutorial] from Red Hat Scholars.
+
