@@ -160,9 +160,6 @@ envsubst > 40-triggers/1-copy-images.yaml
 oc apply -f 40-triggers/1-copy-images.yaml
 ----
 
-copy-images-2mkbl
-
-
 
 
 == Secrets for authentication
