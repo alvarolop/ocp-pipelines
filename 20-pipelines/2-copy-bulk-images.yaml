@@ -1,0 +1,32 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: bulk-copy-images
+  namespace: pipelines-test
+spec:
+  tasks:
+    - name: skopeo-copy
+      params:
+        - name: srcTLSverify
+          value: 'true'
+        - name: destTLSverify
+          value: 'true'
+      taskRef:
+        kind: ClusterTask
+        name: skopeo-copy-alvaro
+      workspaces:
+        - name: images-url
+          workspace: images-url
+  workspaces:
+    - name: images-url
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bulk-copy-images-configmap
+  namespace: pipelines-test
+data:
+  url.txt: |
+    docker://registry.redhat.io/ubi8/openjdk-17:1.15 docker://quay.io/alopezme/openjdk-17:1.15
+    docker://registry.redhat.io/ubi8/openjdk-17:1.15 docker://quay.io/alopezme/pipelines-test:1.15
