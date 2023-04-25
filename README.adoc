@@ -152,11 +152,7 @@ The following example uses a Kubernetes CronJob to implement a basic cron trigge
 .*Copy images from one repo to another*
 [source, bash]
 ----
-cat 40-triggers/1-copy-images-template.yaml | \
-PIPELINES_PROJECT=pipelines-test \
-envsubst > 40-triggers/1-copy-images.yaml
-
-oc apply -f 40-triggers/1-copy-images.yaml
+oc process -f 40-triggers/1-copy-images.yaml | oc apply -f -
 ----
 
 

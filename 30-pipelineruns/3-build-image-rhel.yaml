@@ -14,7 +14,7 @@ spec:
     - name: image-tag
       value: 0.0.1
     - name: git-context
-      value: 50-dockerfiles
+      value: dockerfiles/rhel-entitlements
   pipelineRef:
     name: build-image
   serviceAccountName: pipeline
