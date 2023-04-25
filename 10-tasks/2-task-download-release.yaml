@@ -5,14 +5,16 @@ objects:
   - apiVersion: tekton.dev/v1beta1
     kind: Task
     metadata:
-      name: list-files
+      name: download-latest
       namespace: ${PIPELINES_PROJECT}
     spec:
       params:
-        - name: path
-          description: Path to list files.
+        - name: organization
+          description: GitHub organization of the repo.
           type: string
-          default: .
+        - name: repository
+          description: GitHub repository.
+          type: string
       workspaces:
         - name: directory
           description: The mounted directory to list files.
@@ -22,10 +24,8 @@ objects:
           image: image-registry.openshift-image-registry.svc:5000/openshift/cli
           script: |
             #!/bin/sh
-            echo "List files in $(params.path):"
-            ls -la $(params.path)
-            echo "List files in $(workspaces.directory.path):"
-            ls -la $(workspaces.directory.path)
+            echo "Downloading latest release from $(params.organization)/$(params.repository) in $(workspaces.directory.path)/splunk-kafka-connect.jar:"
+            curl -sL $(curl -s https://api.github.com/repos/$(params.organization)/$(params.repository)/releases/latest | grep browser_download_url | cut -d\" -f4 |  grep '\.jar$') --output $(workspaces.directory.path)/splunk-kafka-connect.jar
 parameters:
   - name: PIPELINES_PROJECT
     description: "The project where the Pipelines will be deployed."

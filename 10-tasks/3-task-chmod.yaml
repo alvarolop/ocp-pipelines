@@ -5,14 +5,16 @@ objects:
   - apiVersion: tekton.dev/v1beta1
     kind: Task
     metadata:
-      name: list-files
+      name: chmod
       namespace: ${PIPELINES_PROJECT}
     spec:
       params:
-        - name: path
-          description: Path to list files.
+        - name: file
+          description: File to modify.
           type: string
-          default: .
+        - name: permissions
+          description: New permissions.
+          type: string
       workspaces:
         - name: directory
           description: The mounted directory to list files.
@@ -22,10 +24,7 @@ objects:
           image: image-registry.openshift-image-registry.svc:5000/openshift/cli
           script: |
             #!/bin/sh
-            echo "List files in $(params.path):"
-            ls -la $(params.path)
-            echo "List files in $(workspaces.directory.path):"
-            ls -la $(workspaces.directory.path)
+            chmod $(params.permissions) $(workspaces.directory.path)/$(params.file)
 parameters:
   - name: PIPELINES_PROJECT
     description: "The project where the Pipelines will be deployed."
