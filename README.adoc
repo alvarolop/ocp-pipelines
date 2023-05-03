@@ -70,7 +70,6 @@ This section contains several tasks that can be useful for the pipelines.
 oc process -f 10-tasks/1-list-files.yaml | oc apply -f -
 oc process -f 10-tasks/2-task-download-release.yaml | oc apply -f -
 oc process -f 10-tasks/3-task-chmod.yaml | oc apply -f -
-oc apply -f 10-tasks/11-skopeo-copy.yaml
 oc apply -f 10-tasks/12-buildah-with-entitlements.yaml
 ----
 
