@@ -1,4 +1,5 @@
-apiVersion: tekton.dev/v1beta1
+---
+apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
   generateName: build-image-
@@ -17,8 +18,10 @@ spec:
       value: dockerfiles/rhel-entitlements
   pipelineRef:
     name: build-image
-  serviceAccountName: pipeline
-  timeout: 1h0m0s
+  taskRunTemplate:
+    serviceAccountName: pipeline
+  timeouts:
+    pipeline: 1h0m0s
   workspaces:
     - name: git-repo
       volumeClaimTemplate:

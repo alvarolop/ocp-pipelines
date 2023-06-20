@@ -1,5 +1,5 @@
 ---
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
   generateName: bulk-copy-images-
@@ -9,8 +9,10 @@ metadata:
 spec:
   pipelineRef:
     name: bulk-copy-images
-  serviceAccountName: pipeline
-  timeout: 1h0m0s
+  taskRunTemplate:
+    serviceAccountName: pipeline
+  timeouts:
+    pipeline: 1h0m0s
   workspaces:
     - name: images-url
       configMap:

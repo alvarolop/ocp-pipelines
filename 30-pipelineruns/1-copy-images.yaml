@@ -1,4 +1,5 @@
-apiVersion: tekton.dev/v1beta1
+---
+apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
   generateName: copy-images-
@@ -13,8 +14,10 @@ spec:
       value: quay.io/alopezme/openjdk-17:1.15
   pipelineRef:
     name: copy-images
-  serviceAccountName: pipeline
-  timeout: 1h0m0s
+  taskRunTemplate:
+    serviceAccountName: pipeline
+  timeouts:
+    pipeline: 1h0m0s
   workspaces:
     - emptyDir: {}
       name: images-url
