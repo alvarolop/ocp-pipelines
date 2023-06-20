@@ -202,12 +202,12 @@ oc secrets link pipeline git-ssh-key-secret
 .*Option 2: Create Secret with GitHub PAT token*
 [source, bash]
 ----
-oc create secret generic gh-pat-secret \
+oc create secret generic gh-pat-secret -n pipelines-test  \
     --type=kubernetes.io/basic-auth \
     --from-literal=username=$GITHUB_USERNAME \
     --from-literal=password=$GITHUB_PAT
 oc annotate secret gh-pat-secret tekton.dev/git-0="$GIT_PRIVATE_URL"
-oc secrets link pipeline gh-pat-secret
+oc secrets link pipeline gh-pat-secret -n pipelines-test 
 ----
 
 For more information about the PAT creation and configuration, you can follow the instructions that we have in the following https://rhte2023-argo-rollouts.github.io/redhat-workshop-deployment-strategies/redhat-workshop-deployment-strategies/01-setup.html#_configure_your_github_token[workshop guidelines].

@@ -8,7 +8,7 @@ objects:
       name: ${PIPELINES_PROJECT}
       annotations:
         openshift.io/description: "Openshift Pipelines namespace"
-        openshift.io/display-name: "Openshift $PIPELINES_PROJECT"
+        openshift.io/display-name: "Pipelines Testing Project"
 parameters:
   - name: PIPELINES_PROJECT
     description: "The project where the Pipelines will be deployed."
