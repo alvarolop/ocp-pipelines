@@ -13,4 +13,4 @@ parameters:
   - name: PIPELINES_PROJECT
     description: "The project where the Pipelines will be deployed."
     required: false
-    value: pipelines-test
+    value: pipelines
