@@ -113,6 +113,7 @@ In order to create all the tasks, just execute the following commands. It will c
 oc process -f 10-tasks/1-list-files.yaml | oc apply -f -
 oc process -f 10-tasks/2-task-download-release.yaml | oc apply -f -
 oc process -f 10-tasks/3-task-chmod.yaml | oc apply -f -
+oc process -f 10-tasks/4-copy-secret.yaml | oc apply -f -
 oc process -f 10-tasks/12-buildah-with-entitlements.yaml | oc apply -f -
 oc process -f 10-tasks/11-skopeo-copy.yaml | oc apply -f -
 ----
@@ -170,6 +171,9 @@ oc process -f 20-pipelines/31-copy-entitlements.yaml | oc apply -f -
 
 
 
+
+
+
 == Running pipelines
 
 .*Copy images from one repo to another*
@@ -187,7 +191,19 @@ oc create -f 30-pipelineruns/12-copy-bulk-images.yaml
 .*Clone repo and build image*
 [source, bash]
 ----
-oc create -f 30-pipelineruns/3-build-image-rhel.yaml
+oc create -f 30-pipelineruns/21-build-image.yaml
+----
+
+.*Clone repo and build image with RHEL entitlements*
+[source, bash]
+----
+oc create -f 30-pipelineruns/22-build-image-entitlements.yaml
+----
+
+.*Clone repo, download binary and build an image with RHEL entitlements*
+[source, bash]
+----
+oc create -f 30-pipelineruns/23-build-image-download.yaml
 ----
 
 
