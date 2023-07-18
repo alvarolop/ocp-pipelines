@@ -1,0 +1,38 @@
+---
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  generateName: build-image-download-
+  namespace: pipelines
+  labels:
+    tekton.dev/pipeline: build-image-download
+spec:
+  params:
+    - name: git-repo
+      value: https://github.com/alvarolop/ocp-pipelines.git
+    - name: image-name
+      value: quay.io/alopezme/kustomize
+    - name: image-tag
+      value: latest
+    - name: git-context
+      value: dockerfiles/download/Dockerfile
+  pipelineRef:
+    name: build-image-download
+  taskRunTemplate:
+    serviceAccountName: pipeline
+  timeouts:
+    pipeline: 1h0m0s
+  workspaces:
+    - name: git-repo
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
+          volumeMode: Filesystem
+        status: {}
+    - name: docker-credentials
+      secret:
+        secretName: quay-alopezme-pull-secret

@@ -2,10 +2,10 @@
 apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
-  generateName: build-image-
+  generateName: build-image-entitlements-
   namespace: pipelines
   labels:
-    tekton.dev/pipeline: build-image
+    tekton.dev/pipeline: build-image-entitlements
 spec:
   params:
     - name: git-repo
@@ -17,7 +17,7 @@ spec:
     - name: git-context
       value: dockerfiles/rhel-entitlements
   pipelineRef:
-    name: build-image
+    name: build-image-entitlements
   taskRunTemplate:
     serviceAccountName: pipeline
   timeouts:
