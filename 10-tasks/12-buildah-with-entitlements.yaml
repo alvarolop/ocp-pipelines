@@ -76,7 +76,6 @@ objects:
       steps:
         - image: $(params.BUILDER_IMAGE)
           name: build-and-push
-          resources: {}
           script: |
             buildah --storage-driver=$(params.STORAGE_DRIVER) bud \
               $(params.BUILD_EXTRA_ARGS) --format=$(params.FORMAT) \

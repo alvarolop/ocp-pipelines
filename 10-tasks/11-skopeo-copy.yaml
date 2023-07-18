@@ -51,7 +51,6 @@ objects:
           image: >-
             registry.redhat.io/rhel8/skopeo@sha256:264dbe1ff1f9c3c4ad6e2e2f3ad8e29db57c48445efd8bc59eb081d6e48394b6
           name: skopeo-copy
-          resources: {}
           script: >
             # Function to copy multiple images.
 
