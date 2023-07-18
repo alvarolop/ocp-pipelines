@@ -15,6 +15,11 @@ objects:
         - name: repository
           description: GitHub repository.
           type: string
+        - name: file-type
+          description: Selector of the release file.
+          type: string
+          # default: '\.jar$'
+          default: 'linux_amd64'
       workspaces:
         - name: directory
           description: The mounted directory to list files.
@@ -24,8 +29,11 @@ objects:
           image: image-registry.openshift-image-registry.svc:5000/openshift/cli
           script: |
             #!/bin/sh
-            echo "Downloading latest release from $(params.organization)/$(params.repository) in $(workspaces.directory.path)/splunk-kafka-connect.jar:"
-            curl -sL $(curl -s https://api.github.com/repos/$(params.organization)/$(params.repository)/releases/latest | grep browser_download_url | cut -d\" -f4 |  grep '\.jar$') --output $(workspaces.directory.path)/splunk-kafka-connect.jar
+            echo "Downloading latest release from $(params.organization)/$(params.repository) in $(workspaces.directory.path):"
+            DOWNLOAD_URL=$(curl -s https://api.github.com/repos/$(params.organization)/$(params.repository)/releases/latest | grep browser_download_url | cut -d\" -f4 |  grep $(params.file-type))
+            curl -sL $DOWNLOAD_URL --output $(workspaces.directory.path)/$(basename $DOWNLOAD_URL)
+            tar xvf $(workspaces.directory.path)/$(basename $DOWNLOAD_URL)
+
 parameters:
   - name: PIPELINES_PROJECT
     description: "The project where the Pipelines will be deployed."
