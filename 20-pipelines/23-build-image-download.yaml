@@ -23,6 +23,7 @@ objects:
           name: image-tag
           type: string
       tasks:
+
         - name: git-clone
           params:
             - name: url
@@ -33,14 +34,73 @@ objects:
           workspaces:
             - name: output
               workspace: git-repo
+
+        - name: download-latest
+          params:
+            - name: organization
+              value: kubernetes-sigs
+            - name: repository
+              value: kustomize
+            - name: file-type
+              value: linux_amd64
+          runAfter:
+            - git-clone
+          taskRef:
+            kind: Task
+            name: download-latest
+          workspaces:
+            - name: directory
+              workspace: git-repo
+
+        - name: list-files
+          params:
+            - name: path
+              value: .
+          runAfter:
+            - download-latest
+          taskRef:
+            kind: Task
+            name: list-files
+          workspaces:
+            - name: directory
+              workspace: git-repo
+
+        - name: chmod
+          params:
+            - name: file
+              value: kustomize
+            - name: permissions
+              value: '554'
+          runAfter:
+            - list-files
+          taskRef:
+            kind: Task
+            name: chmod
+          workspaces:
+            - name: directory
+              workspace: git-repo
+
+        - name: check-permissions
+          params:
+            - name: path
+              value: .
+          runAfter:
+            - chmod
+          taskRef:
+            kind: Task
+            name: list-files
+          workspaces:
+            - name: directory
+              workspace: git-repo
+
         - name: buildah
           params:
             - name: IMAGE
               value: $(params.image-name):$(params.image-tag)
-            - name: CONTEXT
+            - name: DOCKERFILE
               value: $(params.git-context)
           runAfter:
-            - git-clone
+            - check-permissions
           taskRef:
             name: buildah-with-entitlements
           workspaces:
