@@ -1,0 +1,94 @@
+:imagesdir: ../images
+= Retrieve the etc-pki-entitlement secret
+:sectanchors:
+:sectnumlevels: 2
+:sectnums: 
+:toc:
+
+There are several scenarios in which you can perform Tekton builds using Openshift Pipelines, but your Insights operator is not able to sync the entitlements. For example:
+
+* The Insights operator is disabled.
+* SCA (Simple Content Access) is not enabled in your organization.
+* There is a Firewall outside the OCP cluster blocking Insights communication.
+* etc.
+
+In such cases, you can use the following procedure that consists of two steps: 1) Generating the certificates; and 2) Adding them to your cluster.
+
+
+== Create the certificates
+
+
+First, access http://access.redhat.com/management and, in the *Systems* tab, create a new system. You can use the values that I filled in the following screenshot.
+
+.Create a System in the management console
+image::entitlements-01.png["Create a System in the management console", width=100%]
+
+Second, access the *Subscriptions* section of the system to attach one of your subscriptions:
+
+.Click on Subscriptions > Attach Subscriptions
+image::entitlements-02.png["Attach Subscriptions", width=100%]
+
+In my case, I will use an Employee sub, but you might want to use several subscriptions, depending on the repositories that you may want to access to: 
+
+.Select one or several subscriptions
+image::entitlements-03.png["Select one or several subscriptions", width=100%]
+
+Now, you will be able to 
+
+.Select one or several subscriptions
+image::entitlements-04.png["Select one or several subscriptions", width=100%]
+
+== Add the certificates to Openshift
+
+Once the certificates are downloaded and extracted, you will find them inside a path like this:
+
+[source, console]
+----
+XXXXXX_certificates/consumer_export/export/entitlement_certificates/XXXXXX.pem
+----
+
+Inside the `.pem` file you will have the contents of both fields of the secret:
+
+[source, console]
+----
+$ cat XXXXXX.pem | grep "\-"
+-----BEGIN CERTIFICATE-----
+-----END CERTIFICATE-----
+-----BEGIN ENTITLEMENT DATA-----
+-----END ENTITLEMENT DATA-----
+-----BEGIN RSA SIGNATURE-----
+-----END RSA SIGNATURE-----
+-----BEGIN PRIVATE KEY-----
+-----END PRIVATE KEY-----
+----
+
+Make sure to split it in two according to the following rule:
+
+* `entitlement-key.pem` contains the *PRIVATE KEY*.
+* `entitlement.pem` contains *CERTIFICATE* + *ENTITLEMENT DATA* + *RSA SIGNATURE*.
+
+Now, you can create the secret as follows:
+
+[source, bash]
+----
+oc create secret generic etc-pki-entitlement -n pipelines \
+    --from-file=secrets/entitlement-key.pem --from-file=secrets/entitlement.pem
+----
+
+
+Now, when you run the entitlements build, you will see the following in the Buildah logs:
+
+[source, console]
+----
+Updating Subscription Management repositories.
+Unable to read consumer identity
+Subscription Manager is operating in container mode.
+Red Hat Enterprise Linux 8 for x86_64 - BaseOS   60 MB/s |  62 MB     00:01    
+Red Hat Enterprise Linux 8 for x86_64 - AppStre  57 MB/s |  58 MB     00:01    
+Red Hat Universal Base Image 8 (RPMs) - BaseOS   15 MB/s | 843 kB     00:00    
+Red Hat Universal Base Image 8 (RPMs) - AppStre  47 MB/s | 3.4 MB     00:00    
+Red Hat Universal Base Image 8 (RPMs) - CodeRea 2.5 MB/s | 107 kB     00:00    
+Dependencies resolved.
+----
+
+*Great! The Red Hat Enterprise Linux 8 repositories are available in the build!!*

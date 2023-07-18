@@ -10,7 +10,7 @@ v1.0, 2023-03
 :sectnumlevels: 2
 :sectnums: 
 :source-highlighter: pygments
-:imagesdir: images
+:imagesdir: docs/images
 // Start: Enable admonition icons
 // Start: Enable admonition icons
 ifdef::env-github[]
@@ -321,7 +321,7 @@ For more information, you can access the https://access.redhat.com/documentation
 To get the most out of Openshift Pipelines, you will need to download and install the `tkn` command line tool. You can download it from the https://tekton.dev/docs/cli/[Tekton documentation] or directly from your Openshift cluster:
 
 .Download tkn cli
-image::tkn-cli-download.png["Download tkn cli", width=60%]
+image::tkn-cli-download.png["Download tkn cli", width=40%]
 
 == Annex B: Tutorial
 
@@ -361,3 +361,11 @@ skopeo-copy                 Skopeo is a command...   2 days ago
 tkn                         This task performs ...   2 days ago
 trigger-jenkins-job         The following task ...   2 days ago
 ----
+
+== Annex D: Retrieve the etc-pki-entitlement secret
+
+In some cases, the Insights Operator cannot retrieve the `etc-pki-entitlement` secret correctly. In such cases, it is possible to download the certificate from the Red Hat management console. If this is your case...
+
+
+>> link:docs/entitlements/README.adoc[Click Here] <<
+
