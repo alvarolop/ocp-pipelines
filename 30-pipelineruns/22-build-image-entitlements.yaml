@@ -3,7 +3,7 @@ apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
   generateName: build-image-
-  namespace: pipelines-test
+  namespace: pipelines
   labels:
     tekton.dev/pipeline: build-image
 spec:

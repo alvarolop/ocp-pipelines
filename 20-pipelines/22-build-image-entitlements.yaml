@@ -1,0 +1,58 @@
+---
+apiVersion: template.openshift.io/v1
+kind: Template
+objects:
+  - apiVersion: tekton.dev/v1
+    kind: Pipeline
+    metadata:
+      name: build-image-entitlements
+      namespace: ${PIPELINES_PROJECT}
+    spec:
+      params:
+        - description: Git repo SSH URL
+          name: git-repo
+          type: string
+        - description: Folder in the Git repo where the Dockerfile and extra files are located.
+          name: git-context
+          default: "."
+          type: string
+        - description: Name of the image repository in Quay.
+          name: image-name
+          type: string
+        - description: Tag of the image in Quay.
+          name: image-tag
+          type: string
+      tasks:
+        - name: git-clone
+          params:
+            - name: url
+              value: $(params.git-repo)
+          taskRef:
+            kind: ClusterTask
+            name: git-clone
+          workspaces:
+            - name: output
+              workspace: git-repo
+        - name: buildah
+          params:
+            - name: IMAGE
+              value: $(params.image-name):$(params.image-tag)
+            - name: CONTEXT
+              value: $(params.git-context)
+          runAfter:
+            - git-clone
+          taskRef:
+            name: buildah-with-entitlements
+          workspaces:
+            - name: source
+              workspace: git-repo
+            - name: dockerconfig
+              workspace: docker-credentials
+      workspaces:
+        - name: git-repo
+        - name: docker-credentials
+parameters:
+  - name: PIPELINES_PROJECT
+    description: "The project where the Pipelines will be deployed."
+    required: false
+    value: pipelines

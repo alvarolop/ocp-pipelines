@@ -3,7 +3,7 @@ apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
   generateName: bulk-copy-images-
-  namespace: pipelines-test
+  namespace: pipelines
   labels:
     tekton.dev/pipeline: bulk-copy-images
 spec:

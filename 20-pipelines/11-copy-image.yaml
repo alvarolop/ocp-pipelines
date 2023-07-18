@@ -5,7 +5,7 @@ objects:
   - apiVersion: tekton.dev/v1
     kind: Pipeline
     metadata:
-      name: copy-images
+      name: copy-image
       namespace: ${PIPELINES_PROJECT}
     spec:
       params:

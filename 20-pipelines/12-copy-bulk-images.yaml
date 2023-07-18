@@ -16,7 +16,6 @@ objects:
             - name: destTLSverify
               value: 'true'
           taskRef:
-            kind: ClusterTask
             name: skopeo-copy-fixed
           workspaces:
             - name: images-url
