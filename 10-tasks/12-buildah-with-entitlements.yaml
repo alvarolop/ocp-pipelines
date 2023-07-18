@@ -28,7 +28,7 @@ objects:
           name: IMAGE
           type: string
         - default: >-
-            registry.redhat.io/rhel8/buildah@sha256:ac0b8714cc260c94435cab46fe41b3de0ccbc3d93e38c395fa9d52ac49e521fe
+            registry.redhat.io/rhel8/buildah@sha256:00795fafdab9bbaa22cd29d1faa1a01e604e4884a2c935c1bf8e3d1f0ad1c084
           description: The location of the buildah builder image.
           name: BUILDER_IMAGE
           type: string

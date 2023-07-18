@@ -49,7 +49,7 @@ objects:
             - name: HOME
               value: /tekton/home
           image: >-
-            registry.redhat.io/rhel8/skopeo@sha256:52579594e3057f7a5f7a4665d0b5ceeb1204e24e020a45553d6aae7c6820bb31
+            registry.redhat.io/rhel8/skopeo@sha256:264dbe1ff1f9c3c4ad6e2e2f3ad8e29db57c48445efd8bc59eb081d6e48394b6
           name: skopeo-copy
           resources: {}
           script: >
