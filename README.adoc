@@ -85,7 +85,7 @@ a| List files from a mounted workspace.
 
 | link:10-tasks/2-task-download-release.yaml[Download release]
 |{yes}
-a| Download latest release of a GitHub release from a given organization/repository.
+a| Download the latest release of a GitHub release from a given organization/repository.
 
 
 | link:10-tasks/3-task-chmod.yaml[chmod]
@@ -123,22 +123,49 @@ oc process -f 10-tasks/11-skopeo-copy.yaml | oc apply -f -
 
 == Creating pipelines
 
-.*Copy images from one repo to another*
-[source, bash]
-----
-oc process -f 20-pipelines/1-copy-images.yaml | oc apply -f -
-----
 
-.*Bulk Copy images from one repo to another*
-[source, bash]
-----
-oc process -f 20-pipelines/2-copy-bulk-images.yaml | oc apply -f -
-----
+[cols="30%,70%",options="header",width=100%]
+|===
+|Pipeline
+|Description
 
-.*Clone repo and build image*
+| link:20-pipelines/11-copy-image.yaml[Copy image]
+a| Copy one container image from one container repository to another.
+
+
+| link:20-pipelines/12-copy-bulk-images.yaml[Bulk copy images]
+a| Copy several images listed in a ConfigMap from one container repository to another.
+
+
+| link:20-pipelines/21-build-image.yaml[Build image]
+a| This pipeline builds an image by cloning a git repo and building the image using its Dockerfile and the default `buildah` task.
+
+
+| link:20-pipelines/22-build-image-entitlements.yaml[Build image with entitlements]
+a| This pipeline modifies the default `buildah` task to mount the `etc-pki-entitlements` and be able to install every package present in a repository that your organization has access to.
+
+
+| link:20-pipelines/23-build-image-download.yaml[Build image Download]
+a| This pipeline also builds a container image and includes a binary downloaded from the GH releases section of any repository (By default, it installs `kustomize`). 
+
+
+| link:20-pipelines/31-copy-entitlements.yaml[Copy entitlements]
+a| Pipeline that copies the `etc-pki-entitlements` secret from the `openshift-config-managed` to the selected namespace.
+
+|===
+
+
+
+
+.*Pipelines available in this repository*
 [source, bash]
 ----
-oc process -f 20-pipelines/3-build-image.yaml | oc apply -f -
+oc process -f 20-pipelines/11-copy-image.yaml | oc apply -f -
+oc process -f 20-pipelines/12-copy-bulk-images.yaml | oc apply -f -
+oc process -f 20-pipelines/21-build-image.yaml | oc apply -f -
+oc process -f 20-pipelines/22-build-image-entitlements.yaml | oc apply -f -
+oc process -f 20-pipelines/23-build-image-download.yaml | oc apply -f -
+oc process -f 20-pipelines/31-copy-entitlements.yaml | oc apply -f -
 ----
 
 
@@ -148,13 +175,13 @@ oc process -f 20-pipelines/3-build-image.yaml | oc apply -f -
 .*Copy images from one repo to another*
 [source, bash]
 ----
-oc create -f 30-pipelineruns/1-copy-images.yaml
+oc create -f 30-pipelineruns/11-copy-image.yaml
 ----
 
 .*Bulk Copy images from one repo to another*
 [source, bash]
 ----
-oc create -f 30-pipelineruns/2-copy-bulk-images.yaml
+oc create -f 30-pipelineruns/12-copy-bulk-images.yaml
 ----
 
 .*Clone repo and build image*
@@ -167,7 +194,7 @@ oc create -f 30-pipelineruns/3-build-image-rhel.yaml
 .*Copy Entitlements Secret to current project*
 [source, bash]
 ----
-oc get secret etc-pki-entitlement -n openshift-config-managed -o yaml | yq 'del(.metadata.creationTimestamp, .metadata.uid, .metadata.resourceVersion, .metadata.namespace, .metadata.managedFields)' | oc create -n pipelines-test -f -
+oc get secret etc-pki-entitlement -n openshift-config-managed -o yaml | yq 'del(.metadata.creationTimestamp, .metadata.uid, .metadata.resourceVersion, .metadata.namespace, .metadata.managedFields)' | oc create -n pipelines -f -
 ----
 
 
@@ -219,20 +246,20 @@ type: kubernetes.io/dockerconfigjson
 Once you create the file with its contents, you can apply it to the cluster like this:
 [source, bash]
 ----
-oc apply -n pipelines-test -f secrets/rh-registry-sa.yaml
-oc secrets link -n pipelines-test pipeline rh-registry-sa
+oc apply -f secrets/rh-registry-sa.yaml
+oc secrets link -n pipelines pipeline rh-registry-sa
 ----
 
 For more information, check the full https://access.redhat.com/RegistryAuthentication[KCS article].
 
 === Git repository
 
-To clone a private repository in the pipeline, the `pipeline` Service Account will need to be able to authenticate against the repository. There are basically two main options to get this authentication: Using a username+token (Or a PAT if using GitHub) or using an SSH private key. 
+To clone a private repository in the pipeline, the `pipeline` Service Account will need to be able to authenticate against the repository. There are two main options to get this authentication: Using a username+token (Or a PAT if using GitHub) or using an SSH private key. 
 
 .*Option 1: Create Secret with SSH Private Key*
 [source, bash]
 ----
-oc create secret generic git-ssh-key-secret --type=kubernetes.io/ssh-auth --from-file=ssh-privatekey=$LOCATION_PRIVATE_KEY -n pipelines-test
+oc create secret generic git-ssh-key-secret --type=kubernetes.io/ssh-auth --from-file=ssh-privatekey=$LOCATION_PRIVATE_KEY -n pipelines
 oc annotate secret git-ssh-key-secret tekton.dev/git-0="$GIT_PRIVATE_URL"
 oc secrets link pipeline git-ssh-key-secret
 ----
@@ -240,12 +267,12 @@ oc secrets link pipeline git-ssh-key-secret
 .*Option 2: Create Secret with GitHub PAT token*
 [source, bash]
 ----
-oc create secret generic gh-pat-secret -n pipelines-test  \
+oc create secret generic gh-pat-secret -n pipelines  \
     --type=kubernetes.io/basic-auth \
     --from-literal=username=$GITHUB_USERNAME \
     --from-literal=password=$GITHUB_PAT
 oc annotate secret gh-pat-secret tekton.dev/git-0="$GIT_PRIVATE_URL"
-oc secrets link pipeline gh-pat-secret -n pipelines-test 
+oc secrets link pipeline gh-pat-secret -n pipelines 
 ----
 
 For more information about the PAT creation and configuration, you can follow the instructions that we have in the following https://rhte2023-argo-rollouts.github.io/redhat-workshop-deployment-strategies/redhat-workshop-deployment-strategies/01-setup.html#_configure_your_github_token[workshop guidelines].
@@ -263,8 +290,8 @@ Using an admin account, you can access the organization, go to the Robot Account
 Once you create the file with its contents, you can apply it to the cluster like this:
 [source, bash]
 ----
-oc apply -n pipelines-test -f secrets/quay-alopezme-pull-secret.yaml
-oc secrets link -n pipelines-test pipeline quay-alopezme-pull-secret
+oc apply -f secrets/quay-alopezme-pull-secret.yaml
+oc secrets link -n pipelines pipeline quay-alopezme-pull-secret
 
 ----
 
