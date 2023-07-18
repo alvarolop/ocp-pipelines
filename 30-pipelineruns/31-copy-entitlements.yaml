@@ -1,0 +1,16 @@
+---
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  generateName: copy-entitlements-
+  namespace: pipelines
+  labels:
+    tekton.dev/pipeline: copy-entitlements
+spec:
+  pipelineRef:
+    name: copy-entitlements
+  taskRunTemplate:
+    serviceAccountName: pipeline
+  timeouts:
+    pipeline: 1h0m0s
+
