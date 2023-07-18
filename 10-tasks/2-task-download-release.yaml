@@ -18,8 +18,6 @@ objects:
         - name: file-type
           description: Selector of the release file.
           type: string
-          # default: '\.jar$'
-          default: 'linux_amd64'
       workspaces:
         - name: directory
           description: The mounted directory to list files.
@@ -32,7 +30,7 @@ objects:
             echo "Downloading latest release from $(params.organization)/$(params.repository) in $(workspaces.directory.path):"
             DOWNLOAD_URL=$(curl -s https://api.github.com/repos/$(params.organization)/$(params.repository)/releases/latest | grep browser_download_url | cut -d\" -f4 |  grep $(params.file-type))
             curl -sL $DOWNLOAD_URL --output $(workspaces.directory.path)/$(basename $DOWNLOAD_URL)
-            tar xvf $(workspaces.directory.path)/$(basename $DOWNLOAD_URL)
+            tar xvf $(workspaces.directory.path)/$(basename $DOWNLOAD_URL) --directory $(workspaces.directory.path)/
 
 parameters:
   - name: PIPELINES_PROJECT
