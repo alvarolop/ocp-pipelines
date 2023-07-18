@@ -12,16 +12,24 @@ v1.0, 2023-03
 :source-highlighter: pygments
 :imagesdir: images
 // Start: Enable admonition icons
+// Start: Enable admonition icons
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
 :important-caption: :heavy_exclamation_mark:
 :caution-caption: :fire:
 :warning-caption: :warning:
+// Icons for GitHub
+:yes: :heavy_check_mark:
+:no: :x:
 endif::[]
 ifndef::env-github[]
 :icons: font
+// Icons not for GitHub
+:yes: icon:check[]
+:no: icon:times[]
 endif::[]
+// End: Enable admonition icons
 
 This repository contains resources to deploy and practice Openshift Pipelines.
 
