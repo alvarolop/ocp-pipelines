@@ -66,6 +66,28 @@ In order to split the pipelines executing from the operator itself, we will crea
 oc process -f 00-installation/2-project.yaml | oc apply -f -
 ----
 
+=== Monitoring
+
+If you have Grafana installed in the cluster, you can create the following Dashboards to monitor the status of the pipeline's execution. There are two dashboards obtained from different sources:
+
+* `tekton-overview.json` from the https://grafana.com/grafana/dashboards/16559-tekton-overview[Grafana dashboards marketplace]. This chart tries to provide a full overview.
+* `tekton-dashboard.json` from the https://github.com/jenkins-x-charts/grafana-dashboard/blob/master/charts/grafana-dashboard/dashboards/tekton.json[jenkins-x-charts organization]. This chart is focused on TaskRuns and PipelineRuns.
+
+[source, bash]
+----
+oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-04-dashboard.yaml \
+    -p DASHBOARD_GZIP="$(cat 00-installation/tekton-overview.json | gzip | base64 -w0)" \
+    -p DASHBOARD_NAME=tekton-overview \
+    -p CUSTOM_FOLDER_NAME="Openshift Pipelines"  | oc apply -f -
+
+oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-04-dashboard.yaml \
+    -p DASHBOARD_GZIP="$(cat 00-installation/tekton-dashboard.json | gzip | base64 -w0)" \
+    -p DASHBOARD_NAME=tekton-dashboard \
+    -p CUSTOM_FOLDER_NAME="Openshift Pipelines"  | oc apply -f -
+----
+
+In general, Tekton has several relevant metrics. All of them are detailed https://tekton.dev/docs/pipelines/metrics[in the upstream documentation].
+
 
 == Useful Tasks for the pipelines
 
