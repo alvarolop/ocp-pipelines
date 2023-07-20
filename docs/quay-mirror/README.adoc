@@ -1,0 +1,45 @@
+:imagesdir: ../images
+= Run Tekton Pipelines on Quay Image Mirroring Notifications
+:sectanchors:
+:sectnumlevels: 2
+:sectnums: 
+:toc:
+
+In this section, we are going to explore the proposal by siamaksade in https://cloud.redhat.com/blog/keep-your-applications-secure-with-automatic-rebuilds[Red Hat's Blog: Keep Your Applications Secure With Automatic Rebuilds] and in his GitHub repository https://github.com/siamaksade/quay-mirror-pipeline[quay-mirror-pipeline].
+
+
+NOTE: For this section, I have heavily used the utils provided by *lbohnsac* in his GitHub repository https://github.com/lbohnsac/quay-api[quay-api].
+
+
+The idea is to create a mirror repository in your Quay organization that syncs repository tags every day and generates push notifications to Openshift Pipelines that will build a new image and push it to the final repository. Therefore, these will be the repositories:
+
+* `ubi8/ubi`: This is the upstream images repository.
+* `alopezme/ubi8-mirror`: This repository is located in my Quay instance/org and simply mirrors upstream images and generates notifications every time a new image is stored.
+* `alopezme/kustomize`: This repository contains the final built image with the `kustomize` binary.  
+
+
+.General workflow of repositories
+image::quay-mirror-01.png["General workflow of repositories", width=100%]
+
+
+== Configure Quay repository
+
+First, create a new repository that will mirror the content of the RH official registry:
+
+.Create a new repository
+image::quay-mirror-02.png["Create a new repository", width=100%]
+
+
+Create a Robot Account with the following access to both repositories:
+
+.Permissions of the Robot Account
+image::quay-mirror-03.png["Permissions of the Robot Account", width=100%]
+
+Set up notifications on push:
+
+.Permissions of the Robot Account
+image::quay-mirror-04.png["Permissions of the Robot Account", width=100%]
+
+== Configure the Tekton pipeline
+
+
