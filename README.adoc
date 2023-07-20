@@ -75,12 +75,12 @@ If you have Grafana installed in the cluster, you can create the following Dashb
 
 [source, bash]
 ----
-oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-04-dashboard.yaml \
+oc process -f https://raw.githubusercontent.com/alvarolop/quarkus-observability-app/main/openshift/grafana/grafana-04-dashboard.yaml \
     -p DASHBOARD_GZIP="$(cat 00-installation/tekton-overview.json | gzip | base64 -w0)" \
     -p DASHBOARD_NAME=tekton-overview \
     -p CUSTOM_FOLDER_NAME="Openshift Pipelines"  | oc apply -f -
 
-oc process -f https://raw.githubusercontent.com/alvarolop/rhdg8-server/main/grafana/grafana-04-dashboard.yaml \
+oc process -f https://raw.githubusercontent.com/alvarolop/quarkus-observability-app/main/openshift/grafana/grafana-04-dashboard.yaml \
     -p DASHBOARD_GZIP="$(cat 00-installation/tekton-dashboard.json | gzip | base64 -w0)" \
     -p DASHBOARD_NAME=tekton-dashboard \
     -p CUSTOM_FOLDER_NAME="Openshift Pipelines"  | oc apply -f -
@@ -405,6 +405,6 @@ In some cases, the Insights Operator cannot retrieve the `etc-pki-entitlement` s
 
 == Annex E: Run Tekton Pipelines on Quay Image Mirroring Notifications
 
-In this section, we are going to explore the proposal by siamaksade in https://cloud.redhat.com/blog/keep-your-applications-secure-with-automatic-rebuilds[Red Hat's Blog: Keep Your Applications Secure With Automatic Rebuilds] and in his GitHub repository https://github.com/siamaksade/quay-mirror-pipeline[quay-mirror-pipeline]. For more information:
+In this section, we are going to explore the proposal by *siamaksade* in https://cloud.redhat.com/blog/keep-your-applications-secure-with-automatic-rebuilds[Red Hat's Blog: Keep Your Applications Secure With Automatic Rebuilds] and in his GitHub repository https://github.com/siamaksade/quay-mirror-pipeline[quay-mirror-pipeline]. For more information:
 
 >> link:docs/quay-mirror/README.adoc[Click Here] <<
