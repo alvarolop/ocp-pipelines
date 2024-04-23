@@ -5,6 +5,7 @@ metadata:
   annotations:
     tekton.dev/pipelines.minVersion: 0.12.1
     tekton.dev/tags: image-build
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
   name: buildah-with-entitlements
   labels:
     app.kubernetes.io/version: '0.1'

@@ -3,6 +3,8 @@ apiVersion: triggers.tekton.dev/v1beta1
 kind: EventListener
 metadata:
   name: copy-image
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   serviceAccountName: pipeline
   triggers:
@@ -17,6 +19,8 @@ apiVersion: triggers.tekton.dev/v1beta1
 kind: Trigger 
 metadata:
   name: copy-image-trigger
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   serviceAccountName: pipeline 
   bindings:
