@@ -1,0 +1,14 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: ocp-pipelines
+
+resources:
+  - pipeline-build-image-download.yaml
+  - pipeline-build-image-entitlements.yaml
+  - pipeline-build-image.yaml
+  - pipeline-bulk-copy-images.yaml
+  - pipeline-copy-entitlements.yaml
+  - pipeline-copy-image.yaml
+...

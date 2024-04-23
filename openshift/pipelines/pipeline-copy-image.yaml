@@ -1,0 +1,32 @@
+---
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: copy-image
+spec:
+  params:
+    - description: Source Image from RH registry to copy
+      name: source-image
+      type: string
+    - description: Destination location of the image
+      name: destination-image
+      type: string
+  tasks:
+    - name: skopeo-copy
+      params:
+        - name: srcImageURL
+          value: "docker://$(params.source-image)"
+        - name: destImageURL
+          value: "docker://$(params.destination-image)"
+        - name: srcTLSverify
+          value: 'true'
+        - name: destTLSverify
+          value: 'true'
+      taskRef:
+        kind: ClusterTask
+        name: skopeo-copy
+      workspaces:
+        - name: images-url
+          workspace: images-url
+  workspaces:
+    - name: images-url

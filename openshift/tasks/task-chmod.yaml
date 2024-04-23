@@ -1,0 +1,23 @@
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: chmod
+spec:
+  params:
+    - name: file
+      description: File to modify.
+      type: string
+    - name: permissions
+      description: New permissions.
+      type: string
+  workspaces:
+    - name: directory
+      description: The mounted directory to list files.
+  steps:
+    - name: echo
+      # image: registry.access.redhat.com/ubi8/ubi
+      image: image-registry.openshift-image-registry.svc:5000/openshift/cli
+      script: |
+        #!/bin/sh
+        chmod $(params.permissions) $(workspaces.directory.path)/$(params.file)

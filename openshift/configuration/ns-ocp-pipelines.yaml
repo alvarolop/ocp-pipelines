@@ -1,0 +1,9 @@
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: ocp-pipelines
+  annotations:
+    openshift.io/description: "Namespace to test pipelines"
+    openshift.io/display-name: "OCP Pipelines"
+    argocd.argoproj.io/sync-wave: "-05"
