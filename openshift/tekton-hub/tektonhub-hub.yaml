@@ -1,0 +1,40 @@
+---
+apiVersion: operator.tekton.dev/v1alpha1
+kind: TektonHub
+metadata:
+  name: hub
+spec:
+  targetNamespace: openshift-pipelines 
+  db:                      # Optional: If you want to use custom database
+    secret: tekton-hub-db  # Name of db secret should be `tekton-hub-db`
+
+  categories:              # Optional: If you want to use custom categories
+    - Automation
+    - Build Tools
+    - CLI
+    - Cloud
+    - Code Quality
+
+  catalogs:                # Optional: If you want to use custom catalogs
+    - name: tekton
+      org: tektoncd
+      type: community
+      provider: github
+      url: https://github.com/tektoncd/catalog
+      revision: main
+
+  scopes:                   # Optional: If you want to add new users
+    - name: agent:create
+      users: [alopezme, qwe, pqr]
+    - name: catalog:refresh
+      users: [alopezme, qwe, pqr]
+    - name: config:refresh
+      users: [alopezme, qwe, pqr]
+
+  default:                   # Optional: If you want to add custom default scopes
+    scopes:
+      - rating:read
+      - rating:write
+
+  api:
+    catalogRefreshInterval: 30m 
