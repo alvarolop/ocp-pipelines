@@ -127,17 +127,12 @@ a| Patched version of the Buildah task where the Task also mounts the `etc-pki-e
 |===
 
 
-In order to create all the tasks, just execute the following commands. It will create all the `Tasks` objects in the `pipelines` project:
+In order to create all the tasks, just execute the following commands. It will create all the `Tasks` objects in the `ocp-pipelines` project:
 
 .*Tasks available in this repository*
 [source, bash]
 ----
-oc process -f 10-tasks/1-list-files.yaml | oc apply -f -
-oc process -f 10-tasks/2-task-download-release.yaml | oc apply -f -
-oc process -f 10-tasks/3-task-chmod.yaml | oc apply -f -
-oc process -f 10-tasks/4-copy-secret.yaml | oc apply -f -
-oc process -f 10-tasks/12-buildah-with-entitlements.yaml | oc apply -f -
-oc process -f 10-tasks/11-skopeo-copy.yaml | oc apply -f -
+oc apply -k openshift/tasks
 ----
 
 
@@ -183,12 +178,7 @@ a| Pipeline that copies the `etc-pki-entitlements` secret from the `openshift-co
 .*Pipelines available in this repository*
 [source, bash]
 ----
-oc process -f 20-pipelines/11-copy-image.yaml | oc apply -f -
-oc process -f 20-pipelines/12-copy-bulk-images.yaml | oc apply -f -
-oc process -f 20-pipelines/21-build-image.yaml | oc apply -f -
-oc process -f 20-pipelines/22-build-image-entitlements.yaml | oc apply -f -
-oc process -f 20-pipelines/23-build-image-download.yaml | oc apply -f -
-oc process -f 20-pipelines/31-copy-entitlements.yaml | oc apply -f -
+oc apply -k openshift/pipelines
 ----
 
 
@@ -201,31 +191,31 @@ oc process -f 20-pipelines/31-copy-entitlements.yaml | oc apply -f -
 .*Copy images from one repo to another*
 [source, bash]
 ----
-oc create -f 30-pipelineruns/11-copy-image.yaml
+oc create -f pipelineruns/11-copy-image.yaml
 ----
 
 .*Bulk Copy images from one repo to another*
 [source, bash]
 ----
-oc create -f 30-pipelineruns/12-copy-bulk-images.yaml
+oc create -f pipelineruns/12-copy-bulk-images.yaml
 ----
 
 .*Clone repo and build image*
 [source, bash]
 ----
-oc create -f 30-pipelineruns/21-build-image.yaml
+oc create -f pipelineruns/21-build-image.yaml
 ----
 
 .*Clone repo and build image with RHEL entitlements*
 [source, bash]
 ----
-oc create -f 30-pipelineruns/22-build-image-entitlements.yaml
+oc create -f pipelineruns/22-build-image-entitlements.yaml
 ----
 
 .*Clone repo, download binary and build an image with RHEL entitlements*
 [source, bash]
 ----
-oc create -f 30-pipelineruns/31-copy-entitlements.yaml
+oc create -f pipelineruns/31-copy-entitlements.yaml
 ----
 
 
@@ -234,7 +224,7 @@ oc create -f 30-pipelineruns/31-copy-entitlements.yaml
 .*Copy Entitlements Secret to current project*
 [source, bash]
 ----
-oc create -f 30-pipelineruns/23-build-image-download.yaml
+oc create -f pipelineruns/23-build-image-download.yaml
 ----
 
 If you don't want to use the previous pipeline, you can do it manually with the following command:
@@ -294,8 +284,8 @@ type: kubernetes.io/dockerconfigjson
 Once you create the file with its contents, you can apply it to the cluster like this:
 [source, bash]
 ----
-oc apply -f secrets/rh-registry-sa.yaml
-oc secrets link -n pipelines pipeline rh-registry-sa
+oc apply -f secrets/rh-registry-sa.yaml -n ocp-pipelines
+oc secrets link -n ocp-pipelines pipeline rh-registry-sa
 ----
 
 For more information, check the full https://access.redhat.com/RegistryAuthentication[KCS article].
@@ -338,8 +328,8 @@ Using an admin account, you can access the organization, go to the Robot Account
 Once you create the file with its contents, you can apply it to the cluster like this:
 [source, bash]
 ----
-oc apply -f secrets/quay-alopezme-pull-secret.yaml
-oc secrets link -n pipelines pipeline quay-alopezme-pull-secret
+oc apply -f secrets/quay-alopezme-pull-secret.yaml -n ocp-pipelines
+oc secrets link -n ocp-pipelines pipeline quay-alopezme-pull-secret
 
 ----
 
