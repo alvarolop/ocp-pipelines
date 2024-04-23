@@ -6,7 +6,10 @@ namespace: ocp-pipelines
 
 resources:
   - cronjob-copy-image.yaml
+  # Connects Events and Triggers into an addressable endpoint. 
   - copy-image-eventlistener.yaml
+  # Extracts payload fields
   - copy-image-triggerbinding.yaml
+  # Templates resources to be created (e.g. PipelineRun)
   - copy-image-triggertemplate.yaml
 ...
