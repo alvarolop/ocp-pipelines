@@ -30,7 +30,6 @@ metadata:
   name: get-secret-pipeline
   namespace: openshift-config-managed
 roleRef:
-  kind: ClusterRole
   name: get-secret-pipeline
 subjects:
   - kind: ServiceAccount
