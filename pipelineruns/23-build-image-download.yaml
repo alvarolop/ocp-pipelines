@@ -2,22 +2,22 @@
 apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
-  generateName: build-image-
-  namespace: pipelines
+  generateName: build-image-download-
+  namespace: ocp-pipelines
   labels:
-    tekton.dev/pipeline: build-image
+    tekton.dev/pipeline: build-image-download
 spec:
   params:
     - name: git-repo
       value: https://github.com/alvarolop/ocp-pipelines.git
     - name: image-name
-      value: quay.io/alopezme/pipelines-test
+      value: quay.io/alopezme/kustomize
     - name: image-tag
-      value: 0.0.1
+      value: latest
     - name: git-context
-      value: dockerfiles/basic
+      value: dockerfiles/download/Dockerfile
   pipelineRef:
-    name: build-image
+    name: build-image-download
   taskRunTemplate:
     serviceAccountName: pipeline
   timeouts:

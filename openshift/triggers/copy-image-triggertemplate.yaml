@@ -1,0 +1,27 @@
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: copy-image-template
+spec:
+  params:
+  - name: source-image
+    description: Source Image from RH registry to copy
+  - name: destination-image
+    description: Destination location of the image
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      generateName: copy-image-
+    spec:
+      pipelineRef:
+        name: copy-image
+      params:
+        - name: source-image
+          value: $(tt.params.source-image)
+        - name: destination-image
+          value: $(tt.params.destination-image)
+      workspaces:
+        - emptyDir: {}
+          name: images-url

@@ -1,0 +1,11 @@
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: copy-image-binding
+spec:
+  params:
+    - name: source-image
+      value: registry.redhat.io/ubi8/openjdk-17:1.15
+    - name: destination-image
+      value: quay.io/alopezme/openjdk-17:1.15

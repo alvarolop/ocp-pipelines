@@ -3,7 +3,7 @@ apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
   generateName: copy-entitlements-
-  namespace: pipelines
+  namespace: ocp-pipelines
   labels:
     tekton.dev/pipeline: copy-entitlements
 spec:

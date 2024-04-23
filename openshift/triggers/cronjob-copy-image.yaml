@@ -1,0 +1,24 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: copy-image
+spec:
+  schedule: "*/10 * * * *" # Execute every minute
+  # schedule: "0 8 * * MON" # Execute every Monday at 8AM
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: copy-image
+            image: image-registry.openshift-image-registry.svc:5000/openshift/cli
+            args:
+              - curl
+              - '-v'
+              - '-X'
+              - POST
+              - '--data'
+              - '{}'
+              - 'el-copy-image:8080'
+          restartPolicy: Never

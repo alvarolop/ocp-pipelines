@@ -1,0 +1,25 @@
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: copy-image
+spec:
+  serviceAccountName: pipeline
+  triggers:
+    # - name: copy-image-trigger 
+    #   bindings:
+    #   - ref: copy-image-binding
+    #   template:
+    #     ref: copy-image-template
+    - triggerRef: copy-image-trigger
+---
+apiVersion: triggers.tekton.dev/v1beta1 
+kind: Trigger 
+metadata:
+  name: copy-image-trigger
+spec:
+  serviceAccountName: pipeline 
+  bindings:
+    - ref: copy-image-binding
+  template: 
+    ref: copy-image-template
