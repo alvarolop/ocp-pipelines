@@ -7,3 +7,4 @@ namespace: ocp-pipelines
 resources:
   # Pipeline
   - pipeline-clone-build-push.yaml
+  - task-kaniko.yaml
