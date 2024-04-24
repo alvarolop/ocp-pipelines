@@ -9,6 +9,8 @@ spec:
     secret: tekton-hub-db  # Name of db secret should be `tekton-hub-db`
 
   categories:              # Optional: If you want to use custom categories
+    - My Org 1
+    - My Org 2
     - Automation
     - Build Tools
     - CLI
@@ -17,6 +19,12 @@ spec:
 
   catalogs:                # Optional: If you want to use custom catalogs
     - name: tekton
+      org: tektoncd
+      type: community
+      provider: github
+      url: https://github.com/tektoncd/catalog
+      revision: main
+    - name: My Organization
       org: tektoncd
       type: community
       provider: github

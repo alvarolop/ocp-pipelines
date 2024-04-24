@@ -12,4 +12,5 @@ resources:
   - pipelines
   - triggers
   - tekton-hub
+  - spring-petclinic
 ...

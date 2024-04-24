@@ -1,0 +1,19 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: ocp-pipelines
+
+# All this example is based on siamaksade's work:
+# https://github.com/siamaksade/pipelines-examples/blob/master/pipeline-argocd/pipelines/petclinic-pipeline-dev.yaml
+
+resources:
+  # Pipeline
+  - petclinic-pipeline-dev.yaml
+  
+  # Tasks
+  - image-updater.yaml
+  - int-test.yaml
+  - maven.yaml
+  - redeploy.yaml
+...
