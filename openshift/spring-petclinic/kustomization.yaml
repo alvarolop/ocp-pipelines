@@ -7,6 +7,9 @@ namespace: ocp-pipelines
 # All this example is based on siamaksade's work:
 # https://github.com/siamaksade/pipelines-examples/blob/master/pipeline-argocd/pipelines/petclinic-pipeline-dev.yaml
 
+# It requires this workaround:
+# oc adm policy add-scc-to-user privileged -z pipeline -n ocp-pipelines
+
 resources:
   # Pipeline
   - petclinic-pipeline-dev.yaml
@@ -21,4 +24,3 @@ resources:
   # PVC to speed process up
   - pvc-app-source-pvc.yaml
   - pvc-spring-petclinic-maven-cache-pvc.yaml
-...
