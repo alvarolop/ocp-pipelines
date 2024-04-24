@@ -16,4 +16,5 @@ resources:
   - int-test.yaml
   - maven.yaml
   - redeploy.yaml
+  - s2i-java-11-binary.yaml
 ...
