@@ -7,6 +7,7 @@ spec:
   workspaces:
   - name: maven-cache
   - name: app-source
+  - name: docker-credentials
   params:
   - name: APP_NAME
     type: string
@@ -69,6 +70,8 @@ spec:
     workspaces:
     - name: source
       workspace: app-source
+    - name: dockerconfig
+      workspace: docker-credentials
   - name: deploy
     taskRef:
       name: redeploy

@@ -23,3 +23,6 @@ spec:
   - name: maven-cache
     persistentVolumeClaim:
       claimName: spring-petclinic-maven-cache-pvc
+  - name: docker-credentials
+    secret:
+      secretName: quay-alopezme-pull-secret
