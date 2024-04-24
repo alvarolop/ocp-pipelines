@@ -58,15 +58,15 @@ spec:
     - name: source
       workspace: app-source
   - name: build-image
-    taskRef:
-      name: s2i-java-11-binary
+    params:
+      - name: IMAGE
+        value: $(params.APP_IMAGE_NAME):$(params.APP_IMAGE_TAG)
+      # - name: CONTEXT
+      #   value: $(params.git-context)
     runAfter:
       - build-jar
-    params:
-      - name: TLSVERIFY
-        value: "false"
-      - name: OUTPUT_IMAGE
-        value: $(params.APP_IMAGE_NAME):$(params.APP_IMAGE_TAG)
+    taskRef:
+      name: buildah-with-entitlements
     workspaces:
     - name: source
       workspace: app-source
