@@ -26,7 +26,7 @@ spec:
   steps:
     - name: generate
       image: registry.redhat.io/ocp-tools-43-tech-preview/source-to-image-rhel8
-      workingdir: $(workspaces.source.path)/target
+      workingDir: $(workspaces.source.path)/target
       command:
         - 's2i'
         - 'build'
@@ -43,7 +43,7 @@ spec:
           mountPath: /gen-source
     - name: build
       image: registry.redhat.io/rhel8/buildah
-      workingdir: /gen-source
+      workingDir: /gen-source
       command: 
         - buildah
         - bud
