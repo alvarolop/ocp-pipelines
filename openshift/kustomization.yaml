@@ -6,7 +6,7 @@ commonLabels:
   app.kubernetes.io/instance: ocp-pipelines
 
 resources:
-  # - operator # It will be installed using RHOAI automation
+  - operator # It will be installed using RHOAI automation
   - configuration
   - tasks
   - pipelines
