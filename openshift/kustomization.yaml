@@ -3,7 +3,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 labels:
-  app.kubernetes.io/instance: ocp-pipelines
+  - pairs:
+      app.kubernetes.io/instance: ocp-pipelines
 
 resources:
   # It could be installed using RHOAI automation
