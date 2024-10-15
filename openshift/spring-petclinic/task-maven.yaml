@@ -22,7 +22,6 @@ spec:
       command:
         - /usr/bin/mvn
       image: gcr.io/cloud-builders/mvn
-      resources: {}
       workingDir: $(workspaces.source.path)
   workspaces:
     - name: source
