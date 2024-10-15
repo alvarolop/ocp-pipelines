@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - ns-ocp-pipelines.yaml
   - sub-openshift-pipelines-operator.yaml
+  - manual-approval-gate.yaml
