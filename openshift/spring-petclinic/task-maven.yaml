@@ -4,6 +4,8 @@ metadata:
   name: maven
   labels:
     operator.tekton.dev/provider-type: community
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   params:
     - default:

@@ -3,6 +3,8 @@ apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: image-updater
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   params:
     - name: driver

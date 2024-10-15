@@ -1,7 +1,10 @@
+---
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
   name: int-test
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   steps:
     - name: verify

@@ -3,6 +3,8 @@ apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: petclinic-deploy-dev
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   workspaces:
   - name: maven-cache
