@@ -11,4 +11,3 @@ resources:
   - task-download-release.yaml
   - task-list-files.yaml
   - task-skopeo-copy-fixed.yaml
-...

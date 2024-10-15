@@ -7,7 +7,6 @@ commonLabels:
 
 resources:
   - operator # It will be installed using RHOAI automation
-  - configuration
   - tasks
   - pipelines
   - triggers

@@ -12,4 +12,3 @@ resources:
   - copy-image-triggerbinding.yaml
   # Templates resources to be created (e.g. PipelineRun)
   - copy-image-triggertemplate.yaml
-...
