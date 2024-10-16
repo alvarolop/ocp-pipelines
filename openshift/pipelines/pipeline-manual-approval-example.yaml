@@ -12,7 +12,7 @@ spec:
       params:
         - name: message
           value: "This is the initial Task that is executed before the Manual Approval."
-    - name: manual-approval-example-taskmanual-approval-example-task
+    - name: manual-approval-example-task
       taskRef:
         apiVersion: openshift-pipelines.org/v1alpha1
         kind: ApprovalTask
