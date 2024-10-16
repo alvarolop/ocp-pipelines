@@ -1,0 +1,19 @@
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: echo
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  params:
+    - name: message
+      description: Message to print.
+      type: string
+      default: .
+  steps:
+    - name: echo
+      image: image-registry.openshift-image-registry.svc:5000/openshift/cli
+      script: |
+        #!/bin/sh
+        echo "$(params.message)"

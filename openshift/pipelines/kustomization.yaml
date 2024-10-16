@@ -11,3 +11,4 @@ resources:
   - pipeline-bulk-copy-images.yaml
   - pipeline-copy-entitlements.yaml
   - pipeline-copy-image.yaml
+  - pipeline-manual-approval-example.yaml

@@ -9,5 +9,6 @@ resources:
   - task-chmod.yaml
   - task-copy-secret.yaml
   - task-download-release.yaml
+  - task-echo.yaml
   - task-list-files.yaml
   - task-skopeo-copy-fixed.yaml
