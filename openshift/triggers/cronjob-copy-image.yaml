@@ -4,8 +4,9 @@ kind: CronJob
 metadata:
   name: copy-image
 spec:
-  schedule: "*/10 * * * *" # Execute every 10 minutes
+  # schedule: "*/10 * * * *" # Execute every 10 minutes
   # schedule: "0 8 * * MON" # Execute every Monday at 8AM
+  schedule: "0 8 * * *" # Execute every Day at 8AM
   jobTemplate:
     spec:
       template:
