@@ -12,10 +12,12 @@ spec:
       params:
         - name: message
           value: "This is the initial Task that is executed before the Manual Approval."
-    - name: example-manual-approval-task
+    - name: manual-approval-example-taskmanual-approval-example-task
       taskRef:
         apiVersion: openshift-pipelines.org/v1alpha1
         kind: ApprovalTask
+      runAfter:
+        - intro
       params:
       - name: approvers
         value:
@@ -32,6 +34,8 @@ spec:
       taskRef:
         kind: Task
         name: echo
+      runAfter:
+        - manual-approval-example-task
       params:
         - name: message
           value: "This Task was executed only because the approval was successful."
