@@ -3,5 +3,7 @@ apiVersion: operator.tekton.dev/v1alpha1
 kind: ManualApprovalGate
 metadata:
   name: manual-approval-gate
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   targetNamespace: ocp-pipelines
