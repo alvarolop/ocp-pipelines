@@ -1,0 +1,52 @@
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: build-tekton-triggers-template
+  annotations:
+    triggers.tekton.dev/old-escape-quotes: "true"
+spec:
+  params:
+    - name: body
+      description: Message to print
+    - name: header
+      description: Message to print
+    - name: repository-workspace-name
+      description: Message to print
+    - name: repository-name
+      description: Message to print
+    - name: branch-name
+      description: Branch-name used during git-clone
+      default: main
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1
+    kind: PipelineRun
+    metadata:
+      generateName: image-build-$(tt.params.repository-workspace-name)-$(tt.params.repository-name)
+    spec:
+      pipelineRef:
+        name: build-tekton-triggers
+      params:
+        - name: repository-workspace-name
+          value: $(tt.params.repository-workspace-name)
+        - name: repository-name
+          value: $(tt.params.repository-name)
+        - name: branch-name
+          value: $(tt.params.branch-name)
+        - name: json-to-print
+          value: $(tt.params.body)
+        - name: header
+          value: $(tt.params.header)
+      workspaces:  
+        - name: git-repo
+          volumeClaimTemplate:
+            spec:
+              accessModes:
+                - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 1Gi
+              volumeMode: Filesystem
+        - name: docker-credentials
+          secret:
+            secretName: quay-alopezme-pull-secret

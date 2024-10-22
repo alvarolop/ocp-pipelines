@@ -1,0 +1,45 @@
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: el-build-tekton-triggers
+  labels:
+    app.kubernetes.io/managed-by: EventListener
+    app.kubernetes.io/part-of: Triggers
+    eventlistener: echo
+spec:
+  to:
+    kind: Service
+    name: el-build-tekton-triggers
+  port:
+    targetPort: http-listener
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: build-tekton-triggers
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  serviceAccountName: pipeline
+  triggers:
+    - triggerRef: build-tekton-triggers
+---
+apiVersion: triggers.tekton.dev/v1beta1 
+kind: Trigger 
+metadata:
+  name: build-tekton-triggers
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  serviceAccountName: pipeline 
+  interceptors:
+    - ref:
+        name: "cel"
+      params:
+      - name: "filter"
+        value: "body.repository.workspace.name in ['bigendian32']"
+  bindings:
+    - ref: build-tekton-triggers-binding
+  template: 
+    ref: build-tekton-triggers-template

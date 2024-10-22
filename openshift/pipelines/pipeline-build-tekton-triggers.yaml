@@ -1,0 +1,118 @@
+---
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: build-tekton-triggers
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  params:
+    - description: JSON to print.
+      name: json-to-print
+      type: string
+      default: "{}"
+    - description: Header to print.
+      name: header
+      type: string
+      default: ""
+    - name: repository-name
+      type: string
+    - name: repository-workspace-name
+      type: string
+    - name: git-clone-url
+      type: string
+      default: ""
+    - name: branch-name
+      type: string
+      default: "main"
+    - description: TLS_VERIFY Quay repository
+      name: image-quay-tlsverify
+      default: 'false'
+      type: string
+    - description: Name of the image repository in Quay.
+      name: image-registry
+      type: string
+      default: quay.io
+  tasks:
+    - name: print-full-payload
+      taskRef:
+        kind: Task
+        name: echo-json
+      params:
+        - name: json-to-print
+          value: "$(params.json-to-print)"
+
+    - name: print-full-header
+      taskRef:
+        kind: Task
+        name: echo-json
+      params:
+        - name: json-to-print
+          value: "$(params.header)"
+
+    - name: compose-repo-url
+      taskRef:
+        kind: Task
+        name: compose-repo-url
+      params:
+        - name: repository-workspace-name
+          value: "$(params.repository-workspace-name)"
+        - name: repository-name
+          value: "$(params.repository-name)"
+          
+    - name: echo-git-repo
+      taskRef:
+        kind: Task
+        name: echo-message
+      runAfter:
+        - compose-repo-url
+      params:
+        - name: message
+          value: "$(tasks.compose-repo-url.results.git-clone-url)"
+
+    - name: git-clone
+      params:
+        - name: url
+          value: $(tasks.compose-repo-url.results.git-clone-url)
+        - name: revision
+          value: $(params.branch-name)
+      taskRef:
+        kind: ClusterTask
+        name: git-clone
+      runAfter:
+        - echo-git-repo
+      workspaces:
+        - name: output
+          workspace: git-repo
+
+    - name: extract-quay-env
+      taskRef:
+        kind: Task
+        name: extract-quay-env
+      runAfter:
+        - git-clone
+      workspaces:
+        - name: output
+          workspace: git-repo
+    - name: buildah
+      params:
+        - name: IMAGE
+          value: $(params.image-registry)/$(tasks.extract-quay-env.results.imageOrganization)/$(tasks.extract-quay-env.results.imageName):$(tasks.extract-quay-env.results.imageTag)
+        - name: TLSVERIFY
+          value: $(params.image-quay-tlsverify) 
+        - name: CONTEXT
+          value: $(tasks.extract-quay-env.results.gitContext)
+      runAfter:
+        - extract-quay-env
+      taskRef:
+        kind: ClusterTask
+        name: buildah
+      workspaces:
+        - name: source
+          workspace: git-repo
+        - name: dockerconfig
+          workspace: docker-credentials
+
+  workspaces:
+    - name: git-repo
+    - name: docker-credentials

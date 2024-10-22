@@ -1,0 +1,19 @@
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: build-tekton-triggers-binding
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  params:
+    - name: body
+      value: $(body)
+    - name: header
+      value: $(header)
+    - name: repository-workspace-name
+      value: $(body.repository.workspace.name)
+    - name: repository-name
+      value: $(body.repository.name)
+    - name: branch-name
+      value: $(body.pullrequest.destination.branch.name)

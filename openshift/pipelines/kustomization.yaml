@@ -8,6 +8,7 @@ resources:
   - pipeline-build-image-download.yaml
   - pipeline-build-image-entitlements.yaml
   - pipeline-build-image.yaml
+  - pipeline-build-tekton-triggers.yaml
   - pipeline-bulk-copy-images.yaml
   - pipeline-copy-entitlements.yaml
   - pipeline-copy-image.yaml
