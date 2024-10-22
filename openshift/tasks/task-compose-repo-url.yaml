@@ -1,0 +1,27 @@
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: compose-repo-url
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  params:
+    - name: repository-workspace-name
+      description: Workspace name
+      type: string
+    - name: repository-name
+      description: Repository name
+      type: string
+    - name: repository-server
+      type: string
+      default: git@bitbucket.org
+  results:
+    - name: git-clone-url
+      description: Full URL to clone repository
+  steps:
+    - name: compose-repo-url
+      image: image-registry.openshift-image-registry.svc:5000/openshift/cli
+      script: |
+        #!/bin/sh
+        echo "git@$(params.repository-server)/$(params.repository-workspace-name)/$(params.repository-name).git" | tee $(results.git-clone-url.path)

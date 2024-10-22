@@ -7,8 +7,11 @@ namespace: ocp-pipelines
 resources:
   - task-buildah-with-entitlements.yaml
   - task-chmod.yaml
+  - task-compose-repo-url.yaml
   - task-copy-secret.yaml
   - task-download-release.yaml
-  - task-echo.yaml
+  - task-echo-json.yaml
+  - task-echo-message.yaml
+  - task-extract-quay-env.yaml
   - task-list-files.yaml
   - task-skopeo-copy-fixed.yaml

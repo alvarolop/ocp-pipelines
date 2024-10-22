@@ -1,0 +1,39 @@
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: extract-quay-env
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  params:
+    - name: quay-env-file
+      description: Full identifier of the repository.
+      type: string
+      default: "quay.env"
+  results:
+    - name: imageOrganization
+      description: Quay image organization 
+    - name: imageName
+      description: Quay repository name
+    - name: imageTag
+      description: Quay image tag
+    - name: gitContext
+      description: Dockerfile location
+  steps:
+    - name: extract-quay-env
+      image: image-registry.openshift-image-registry.svc:5000/openshift/cli
+      script: |
+        #!/bin/sh
+        echo "Parsing quay.env variables"
+        source $(workspaces.output.path)/$(params.quay-env-file)
+        echo -n "$imageOrganization" | tee $(results.imageOrganization.path)
+        echo ""
+        echo -n "$gitContext" | tee $(results.gitContext.path)
+        echo ""
+        echo -n "$imageName" | tee $(results.imageName.path)
+        echo ""
+        echo -n "$imageTag" | tee $(results.imageTag.path)
+  workspaces:
+    - name: output
+      description: git-repo output

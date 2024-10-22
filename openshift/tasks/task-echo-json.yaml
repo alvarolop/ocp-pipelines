@@ -1,0 +1,19 @@
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: echo-json
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  params:
+    - name: json-to-print
+      description: Message to print.
+      type: string
+      default: .
+  steps:
+    - name: echo
+      image: quay.io/alopezme/pipelines-tools:latest
+      script: |
+        #!/usr/bin/env bash
+        echo '$(params.json-to-print)' | jq .
