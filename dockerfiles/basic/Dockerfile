@@ -4,4 +4,7 @@ USER 0
 
 RUN dnf upgrade -y && dnf install -y jq httpd-tools && dnf clean all
 
+# Set the HOME directory to a writable path
+ENV HOME=/tmp
+
 USER 1000
