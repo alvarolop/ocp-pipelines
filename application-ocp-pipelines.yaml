@@ -11,7 +11,7 @@ spec:
     server: 'https://kubernetes.default.svc'
   project: default
   source:
-    path: openshift
+    path: gitops
     repoURL: https://github.com/alvarolop/ocp-pipelines
     targetRevision: main
   syncPolicy:
