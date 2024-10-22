@@ -47,52 +47,170 @@ toc::[]
 * *DevOps*: Designed with microservices and distributed teams in mind.
 
 
-To get more details, you can check the https://docs.openshift.com/container-platform/4.13/cicd/pipelines/understanding-openshift-pipelines.html[official documentation].
+To get more details, you can check the https://docs.openshift.com/pipelines/1.16/about/understanding-openshift-pipelines.html[official documentation].
 
 
-== Installation of the operator
+== TL;DR Full Installation
 
-Installing the operator is as easy as creating a Subscription in the project `openshift-operators`. The Pipelines Operator is installed for All namespaces: 
+NOTE: This repository has been fully migrated to the GitOps pattern. This means that it is strongly recommended to deploy ArgoCD in order to deploy these components in an standard way. You can install GitOps using this [https://github.com/alvarolop/ocp-gitops-playground]repository.
 
-[source, bash]
-----
-oc apply -f 00-installation/1-subscription.yaml
-----
 
-In order to split the pipelines executing from the operator itself, we will create another namespace where the pipelines will be executed:
+As this is a public repo, it is not possible to upload all the credentials freely to the git repository. For that reason, the following script will install the Pipelines operator and configure it. After that, it will configure Grafana dashboards if Grafana is installed and create the appropriate secrets to access all the resources. Please, execute the following script:
 
 [source, bash]
 ----
-oc process -f 00-installation/2-project.yaml | oc apply -f -
+./auto-install.sh
 ----
 
-=== Monitoring
+[IMPORTANT]
+===
+This task still lacks the configuration of the secrets. For that, you will need to create the `secrets` directory and add your secrets in there. Check:
+  * the following section and create the files, *but don't apply the resources to the cluster*.
+  * the annex C to create the entitlements for builds. *Don't apply the resources to the cluster*.
+===
+
+This is the folder structure you should have after configuring the secrets:
+
+[source, bash]
+----
+secrets/
+├── entitlement-key.pem
+├── entitlement.pem
+├── git-secret-ssh.yaml
+├── kustomization.yaml
+├── quay-alopezme-pull-secret.yaml
+└── rh-registry-sa.yaml
+----
+
+The content of the `kustomization.yaml` should be:
+
+[source, yaml]
+----
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: ocp-pipelines
+
+resources:
+
+  # Red Hat Registry
+  - rh-registry-sa.yaml
+
+  # Quay Robot Account
+  - quay-alopezme-pull-secret.yaml
+
+  # Git repositories
+  - git-secret-ssh.yaml
+
+
+secretGenerator:
+  - name: etc-pki-entitlement
+    files:
+      - entitlement-key.pem
+      - entitlement.pem
+    options:
+      disableNameSuffixHash: true
+----
+
+
+
+== Secrets for authentication
+
+In many practical use cases, you might need to pull from private Git repositories or might need to push to an external container registry such as Quay.io. In this section, we will summarize how to create the `Secrets` to configure all the credentials.
+
+=== Red Hat Registry
+
+To use the `registry.redhat.io` registry, you have to have a Red Hat login. To consume container images from registry.redhat.io in shared environments such as OpenShift, it is recommended for an administrator to use a Registry Service Account, also referred to as authentication tokens, in place of an individual's Customer Portal credentials.
+
+The management of Service Accounts is available via the https://access.redhat.com/terms-based-registry/#/[Registry Service Account management application].
+
+[source, yaml]
+----
+apiVersion: v1
+kind: Secret
+metadata:
+  name: $SECRET_NAME
+data:
+  .dockerconfigjson: $DOCKER_CONFIG_FILE_CONTENT
+type: kubernetes.io/dockerconfigjson
+----
+
+Once you create the file with its contents, you can apply it to the cluster like this:
+[source, bash]
+----
+oc apply -f secrets/rh-registry-sa.yaml -n ocp-pipelines
+oc secrets link -n ocp-pipelines pipeline rh-registry-sa
+----
+
+For more information, check the full https://access.redhat.com/RegistryAuthentication[KCS article].
+
+=== Git repository
+
+To clone a private repository in the pipeline, the `pipeline` Service Account will need to be able to authenticate against the repository. There are two main options to get this authentication: Using a username+token (Or a PAT if using GitHub) or using an SSH private key. 
+
+.*Option 1: Create Secret with SSH Private Key*
+[source, bash]
+----
+oc create secret generic git-secret-ssh --type=kubernetes.io/ssh-auth --from-file=ssh-privatekey=$LOCATION_PRIVATE_KEY -n pipelines
+oc annotate secret git-secret-ssh tekton.dev/git-0="$GIT_PRIVATE_URL"
+oc secrets link -n ocp-pipeline pipeline git-secret-ssh
+----
+
+.*Option 2: Create Secret with GitHub PAT token*
+[source, bash]
+----
+oc create secret generic gh-pat-secret -n ocp-pipelines  \
+    --type=kubernetes.io/basic-auth \
+    --from-literal=username=$GITHUB_USERNAME \
+    --from-literal=password=$GITHUB_PAT
+oc annotate secret gh-pat-secret tekton.dev/git-0="$GIT_PRIVATE_URL"
+oc secrets link -n ocp-pipelines pipeline gh-pat-secret
+----
+
+For more information about the PAT creation and configuration, you can follow the instructions that we have in the following https://rhte2023-argo-rollouts.github.io/redhat-workshop-deployment-strategies/redhat-workshop-deployment-strategies/01-setup.html#_configure_your_github_token[workshop guidelines].
+
+
+=== Quay Robot Account
+
+Robot accounts are a way to access repositories without requiring a human user account. A robot account has its own credentials, generated by Quay and linked to an Organization. To create a Robot Account and get its credentials, you have to access the Quay web console. For this repository, we are going to use my personal Quay organization, which is located at: https://quay.io/user/alopezme. 
+
+.Quay robot accounts dashboard
+image::quay-robot-accounts-dashboard.png["Quay robot accounts dashboard"]
+
+Using an admin account, you can access the organization, go to the Robot Accounts section and click on `Create Robot Account`. After creating the Account, click on it to directly download the Kubernetes secret definition that you have to apply in your namespace.
+
+Once you create the file with its contents, you can apply it to the cluster like this:
+[source, bash]
+----
+oc apply -f secrets/quay-alopezme-pull-secret.yaml -n ocp-pipelines
+oc secrets link -n ocp-pipelines pipeline quay-alopezme-pull-secret
+
+----
+
+For more information, you can access the https://access.redhat.com/documentation/en-us/red_hat_quay/3.8/html/use_red_hat_quay/use-quay-manage-repo[documentation] of the on-premise installation of Quay.
+
+
+
+
+
+== Monitoring
 
 If you have Grafana installed in the cluster, you can create the following Dashboards to monitor the status of the pipeline's execution. There are two dashboards obtained from different sources:
 
 * `tekton-overview.json` from the https://grafana.com/grafana/dashboards/16559-tekton-overview[Grafana dashboards marketplace]. This chart tries to provide a full overview.
 * `tekton-dashboard.json` from the https://github.com/jenkins-x-charts/grafana-dashboard/blob/master/charts/grafana-dashboard/dashboards/tekton.json[jenkins-x-charts organization]. This chart is focused on TaskRuns and PipelineRuns.
 
-[source, bash]
-----
-oc process -f https://raw.githubusercontent.com/alvarolop/quarkus-observability-app/main/openshift/grafana/grafana-04-dashboard.yaml \
-    -p DASHBOARD_GZIP="$(cat 00-installation/tekton-overview.json | gzip | base64 -w0)" \
-    -p DASHBOARD_NAME=tekton-overview \
-    -p CUSTOM_FOLDER_NAME="Openshift Pipelines"  | oc apply -f -
-
-oc process -f https://raw.githubusercontent.com/alvarolop/quarkus-observability-app/main/openshift/grafana/grafana-04-dashboard.yaml \
-    -p DASHBOARD_GZIP="$(cat 00-installation/tekton-dashboard.json | gzip | base64 -w0)" \
-    -p DASHBOARD_NAME=tekton-dashboard \
-    -p CUSTOM_FOLDER_NAME="Openshift Pipelines"  | oc apply -f -
-----
-
 In general, Tekton has several relevant metrics. All of them are detailed https://tekton.dev/docs/pipelines/metrics[in the upstream documentation].
 
 
-== Useful Tasks for the pipelines
+
+
+
+== Useful Tasks and Pipelines
+
+=== Tasks
 
 This section contains several tasks that can be useful for the pipelines. 
-
 
 [cols="30%,10%,60%",options="header",width=100%]
 |===
@@ -127,19 +245,8 @@ a| Patched version of the Buildah task where the Task also mounts the `etc-pki-e
 |===
 
 
-In order to create all the tasks, just execute the following commands. It will create all the `Tasks` objects in the `ocp-pipelines` project:
 
-.*Tasks available in this repository*
-[source, bash]
-----
-oc apply -k openshift/tasks
-----
-
-
-
-
-
-== Creating pipelines
+=== Pipelines
 
 
 [cols="30%,70%",options="header",width=100%]
@@ -171,17 +278,6 @@ a| This pipeline also builds a container image and includes a binary downloaded 
 a| Pipeline that copies the `etc-pki-entitlements` secret from the `openshift-config-managed` to the selected namespace.
 
 |===
-
-
-
-
-.*Pipelines available in this repository*
-[source, bash]
-----
-oc apply -k openshift/pipelines
-----
-
-
 
 
 
@@ -246,94 +342,8 @@ Triggers capture external events, such as a Git pull request, and process them t
 * The *EventListener* resource provides an endpoint or an event sink, that listens for incoming HTTP-based events with a JSON payload.
 
 
-=== Automatic periodic execution of the Pipelines
+We have an example using a `CronJob` to automatically trigger the Pipeline every morning.
 
-The following example uses a Kubernetes CronJob to implement a basic cron trigger that runs every minute. This works by using a cron job that emits an HTTP request to the EventListener Service endpoint.
-
-
-.*Copy images from one repo to another*
-[source, bash]
-----
-oc process -f 40-triggers/1-copy-images.yaml | oc apply -f -
-----
-
-
-
-== Secrets for authentication
-
-In many practical use cases, you might need to pull from private Git repositories or might need to push to an external container registry such as Quay.io. In this section, we will summarize how to create the `Secrets` to configure all the credentials.
-
-=== Red Hat Registry
-
-To use the `registry.redhat.io` registry, you have to have a Red Hat login. To consume container images from registry.redhat.io in shared environments such as OpenShift, it is recommended for an administrator to use a Registry Service Account, also referred to as authentication tokens, in place of an individual's Customer Portal credentials.
-
-The management of Service Accounts is available via the https://access.redhat.com/terms-based-registry/#/[Registry Service Account management application].
-
-
-[source, yaml]
-----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: $SECRET_NAME
-data:
-  .dockerconfigjson: $DOCKER_CONFIG_FILE_CONTENT
-type: kubernetes.io/dockerconfigjson
-----
-
-Once you create the file with its contents, you can apply it to the cluster like this:
-[source, bash]
-----
-oc apply -f secrets/rh-registry-sa.yaml -n ocp-pipelines
-oc secrets link -n ocp-pipelines pipeline rh-registry-sa
-----
-
-For more information, check the full https://access.redhat.com/RegistryAuthentication[KCS article].
-
-=== Git repository
-
-To clone a private repository in the pipeline, the `pipeline` Service Account will need to be able to authenticate against the repository. There are two main options to get this authentication: Using a username+token (Or a PAT if using GitHub) or using an SSH private key. 
-
-.*Option 1: Create Secret with SSH Private Key*
-[source, bash]
-----
-oc create secret generic git-ssh-key-secret --type=kubernetes.io/ssh-auth --from-file=ssh-privatekey=$LOCATION_PRIVATE_KEY -n pipelines
-oc annotate secret git-ssh-key-secret tekton.dev/git-0="$GIT_PRIVATE_URL"
-oc secrets link pipeline git-ssh-key-secret
-----
-
-.*Option 2: Create Secret with GitHub PAT token*
-[source, bash]
-----
-oc create secret generic gh-pat-secret -n pipelines  \
-    --type=kubernetes.io/basic-auth \
-    --from-literal=username=$GITHUB_USERNAME \
-    --from-literal=password=$GITHUB_PAT
-oc annotate secret gh-pat-secret tekton.dev/git-0="$GIT_PRIVATE_URL"
-oc secrets link pipeline gh-pat-secret -n pipelines 
-----
-
-For more information about the PAT creation and configuration, you can follow the instructions that we have in the following https://rhte2023-argo-rollouts.github.io/redhat-workshop-deployment-strategies/redhat-workshop-deployment-strategies/01-setup.html#_configure_your_github_token[workshop guidelines].
-
-
-=== Quay Robot Account
-
-Robot accounts are a way to access repositories without requiring a human user account. A robot account has its own credentials, generated by Quay and linked to an Organization. To create a Robot Account and get its credentials, you have to access the Quay web console. For this repository, we are going to use my personal Quay organization, which is located at: https://quay.io/user/alopezme. 
-
-.Quay robot accounts dashboard
-image::quay-robot-accounts-dashboard.png["Quay robot accounts dashboard"]
-
-Using an admin account, you can access the organization, go to the Robot Accounts section and click on `Create Robot Account`. After creating the Account, click on it to directly download the Kubernetes secret definition that you have to apply in your namespace.
-
-Once you create the file with its contents, you can apply it to the cluster like this:
-[source, bash]
-----
-oc apply -f secrets/quay-alopezme-pull-secret.yaml -n ocp-pipelines
-oc secrets link -n ocp-pipelines pipeline quay-alopezme-pull-secret
-
-----
-
-For more information, you can access the https://access.redhat.com/documentation/en-us/red_hat_quay/3.8/html/use_red_hat_quay/use-quay-manage-repo[documentation] of the on-premise installation of Quay.
 
 
 :sectnums!:
