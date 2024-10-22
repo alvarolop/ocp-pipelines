@@ -1,0 +1,64 @@
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: extract-quay-env
+spec:
+  params:
+    - name: quay-env-file
+      description: Location of the quay.env file.
+      type: string
+      default: "quay.env"
+  results:
+    - name: imageOrganization
+      description: Quay image organization 
+    - name: gitContext
+      description: Dockerfile location
+    - name: imageName
+      description: Quay repository name
+    - name: imageTag
+      description: Quay image tag
+  steps:
+    - name: extract-quay-env
+      image: image-registry.openshift-image-registry.svc:5000/openshift/cli
+      script: |
+        #!/bin/sh
+        echo "STEP 1: Add contents to the file to simulate file coming from git-clone"
+        cat <<EOL >> "$(params.quay-env-file)"
+        imageOrganization=alopezme
+        gitContext=.
+        imageName=test-webhook
+        imageTag=latest-automate
+        EOL
+
+        echo "STEP 2: Read the file to check correct content"
+        cat "$(params.quay-env-file)"
+        
+        echo "STEP 3: Try to read the file content and add it to Task results"
+        # Read the quay.env file line by line
+        while IFS='=' read -r key value; do
+          # Skip lines that are empty or start with a comment (#)
+          [[ -z "$key" || "$key" == \#* ]] && continue
+          echo "$value" | tee $(results.$key.path)
+        done < "$(params.quay-env-file)"
+---
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: extract-quay-env-reproducer
+spec:
+  tasks:
+    - name: extract-quay-env
+      taskRef:
+        kind: Task
+        name: extract-quay-env
+
+    # - name: echo-quay-vars
+    #   taskRef:
+    #     kind: Task
+    #     name: echo-message
+    #   runAfter:
+    #     - extract-quay-env
+    #   params:
+    #     - name: message
+    #       value: "$(params.image-registry)/$(tasks.extract-quay-env.results.imageOrganization)/$(tasks.extract-quay-env.results.imageName):$(tasks.extract-quay-env.results.imageTag)"
