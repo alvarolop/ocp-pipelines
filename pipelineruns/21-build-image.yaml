@@ -11,9 +11,9 @@ spec:
     - name: git-repo
       value: https://github.com/alvarolop/ocp-pipelines.git
     - name: image-name
-      value: quay.io/alopezme/pipelines-test
+      value: quay.io/alopezme/pipelines-tools
     - name: image-tag
-      value: 0.0.1
+      value: 1.0.0
     - name: git-context
       value: dockerfiles/basic
   pipelineRef:
