@@ -52,7 +52,7 @@ To get more details, you can check the https://docs.openshift.com/pipelines/1.16
 
 == TL;DR Full Installation
 
-NOTE: This repository has been fully migrated to the GitOps pattern. This means that it is strongly recommended to deploy ArgoCD in order to deploy these components in an standard way. You can install GitOps using this [https://github.com/alvarolop/ocp-gitops-playground]repository.
+NOTE: This repository has been fully migrated to the GitOps pattern. This means that it is strongly recommended to deploy ArgoCD in order to deploy these components in an standard way. You can install GitOps using this https://github.com/alvarolop/ocp-gitops-playground[repository].
 
 
 As this is a public repo, it is not possible to upload all the credentials freely to the git repository. For that reason, the following script will install the Pipelines operator and configure it. After that, it will configure Grafana dashboards if Grafana is installed and create the appropriate secrets to access all the resources. Please, execute the following script:
@@ -63,11 +63,12 @@ As this is a public repo, it is not possible to upload all the credentials freel
 ----
 
 [IMPORTANT]
-===
+====
 This task still lacks the configuration of the secrets. For that, you will need to create the `secrets` directory and add your secrets in there. Check:
+
   * the following section and create the files, *but don't apply the resources to the cluster*.
   * the annex C to create the entitlements for builds. *Don't apply the resources to the cluster*.
-===
+====
 
 This is the folder structure you should have after configuring the secrets:
 

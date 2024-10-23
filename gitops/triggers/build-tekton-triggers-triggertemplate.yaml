@@ -5,6 +5,7 @@ metadata:
   name: build-tekton-triggers-template
   annotations:
     triggers.tekton.dev/old-escape-quotes: "true"
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   params:
     - name: body
