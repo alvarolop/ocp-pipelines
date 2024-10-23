@@ -55,6 +55,21 @@ oc secrets link -n $PIPELINES_NAMESPACE pipeline rh-registry-sa
 oc secrets link -n $PIPELINES_NAMESPACE pipeline git-secret-ssh
 oc secrets link -n $PIPELINES_NAMESPACE pipeline quay-alopezme-pull-secret
 
+
+echo -e "\n=================="
+echo -e "= CONSOLE PLUGIN ="
+echo -e "==================\n"
+
+echo -e "Enable the console plugin:"
+if oc get console.operator.openshift.io cluster -o template='{{.spec.plugins}}' | grep pipelines-console-plugin &> /dev/null; then
+    echo -e "\tChecked. The logging plugin was already enabled."
+else
+    echo -e "\tChecked. The logging plugin was not enabled. Enabling..."
+    oc patch console.operator.openshift.io cluster --type json \
+    --patch '[{"op": "add", "path": "/spec/plugins/-", "value": "pipelines-console-plugin"}]'
+fi
+
+
 echo -e "\n=================="
 echo -e "=     GRAFANA    ="
 echo -e "==================\n"
