@@ -49,6 +49,8 @@ echo -e "Create the Secrets for Git, Quay, and RH Registry"
 oc apply -k secrets
 
 echo -e "Linking the secrets to the pipeline SA"
+echo -n "Waiting for SA pipeline to be created..."; while ! oc get sa pipeline -n $PIPELINES_NAMESPACE &>/dev/null ; do echo -n "."; sleep 1; done; echo "  [OK]"
+
 oc secrets link -n $PIPELINES_NAMESPACE pipeline rh-registry-sa
 oc secrets link -n $PIPELINES_NAMESPACE pipeline git-secret-ssh
 oc secrets link -n $PIPELINES_NAMESPACE pipeline quay-alopezme-pull-secret
