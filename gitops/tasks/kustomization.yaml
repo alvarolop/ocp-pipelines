@@ -15,3 +15,4 @@ resources:
   - task-extract-quay-env.yaml
   - task-list-files.yaml
   - task-skopeo-copy-fixed.yaml
+  - task-sleep.yaml

@@ -1,0 +1,18 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: sleep-task
+spec:
+  params:
+    - name: sleep-duration
+      description: Duration to sleep (in seconds)
+      type: string
+      default: 1
+  steps:
+    - name: sleep-step
+      image: registry.access.redhat.com/ubi8/ubi-minimal
+      script: |
+        #!/bin/sh
+        echo "Sleeping for $(params.sleep-duration) seconds..."
+        sleep $(params.sleep-duration)

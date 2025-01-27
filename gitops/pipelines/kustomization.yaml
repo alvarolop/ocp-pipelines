@@ -13,3 +13,4 @@ resources:
   - pipeline-copy-entitlements.yaml
   - pipeline-copy-image.yaml
   - pipeline-manual-approval-example.yaml
+  - pipeline-sleep-example.yaml
