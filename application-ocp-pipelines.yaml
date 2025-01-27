@@ -5,7 +5,7 @@ metadata:
   labels:
     app: ocp-pipelines
   name: ocp-pipelines
-  namespace: gitops
+  namespace: openshift-gitops
 spec:
   destination:
     server: 'https://kubernetes.default.svc'
