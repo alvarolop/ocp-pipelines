@@ -8,7 +8,7 @@ spec:
     - name: sleep-duration
       description: Duration to sleep (in seconds)
       type: string
-      default: 1
+      default: "1"
   steps:
     - name: sleep-step
       image: registry.access.redhat.com/ubi8/ubi-minimal
