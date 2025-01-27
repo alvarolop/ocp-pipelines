@@ -77,13 +77,9 @@ echo -e "==================\n"
 echo -e "Create Grafana dashboards if Observability is enabled"
 
 if [ "$OBSERVABILITY_ENABLED" = true ]; then
-    if oc get csv -n openshift-operators -o jsonpath='{.items[?(@.spec.displayName=="Grafana Operator")].status.phase}' 2> /dev/null | grep -q "Succeeded"; then
-    echo -e "Grafana Operator is installed and ready, creating Grafana dashboards"
+    echo "Observability is enabled, creating Grafana dashboards."
     oc apply -k grafana
-    else
-    echo "Grafana Operator is not installed or not ready, skipping Grafana dashboard creation."
-    exit 0
-    fi
+
 else
-  echo "Observability is not enabled, skipping Grafana dashboard creation."
+    echo "Observability is not enabled, skipping Grafana dashboard creation."
 fi
