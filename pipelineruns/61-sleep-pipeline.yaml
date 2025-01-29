@@ -1,0 +1,9 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: sleep-pipeline-
+  namespace: ocp-pipelines
+spec:
+  pipelineRef:
+    name: sleep-pipeline

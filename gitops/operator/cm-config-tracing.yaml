@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-tracing
+  namespace: openshift-pipelines
+  labels:
+    app.kubernetes.io/instance: default
+    app.kubernetes.io/part-of: tekton-pipelines
+data:
+  _example: |
+    ################################
+    #                              #
+    #    EXAMPLE CONFIGURATION     #
+    #                              #
+    ################################
+    # This block is not actually functional configuration,
+    # but serves to illustrate the available configuration
+    # options and document them in a way that is accessible
+    # to users that `kubectl edit` this config map.
+    #
+    # These sample configuration options may be copied out of
+    # this example block and unindented to be in the data block
+    # to actually change the configuration.
+    #
+    # Enable sending traces to defined endpoint by setting this to true
+    enabled: "true"
+    #
+    # API endpoint to send the traces to
+    # (optional): The default value is given below
+    endpoint: "http://jaeger-collector.jaeger.svc.cluster.local:14268/api/traces"
+    # (optional) Name of the k8s secret which contains basic auth credentials
+    credentialsSecret: "jaeger-creds"
+  enabled: "true"
+  # endpoint: "http://jaeger-collector.jaeger.svc.cluster.local:14268/api/traces"
+  endpoint: 'http://app-to-kafka-collector.otel.svc.cluster.local:14268/api/traces'

@@ -206,6 +206,32 @@ In general, Tekton has several relevant metrics. All of them are detailed https:
 
 
 
+== Distributed Tracing
+
+With distributed tracing, we can track the time taken by each action in the pipeline like reconciling logic, fetching resources, pulling images etc. This allows the developers to improve the reconciliation logic and also allow end users to monitor and optimize the pipelines.
+
+* Tekton Design Doc: https://github.com/tektoncd/community/blob/main/teps/0124-distributed-tracing-for-tasks-and-pipelines.md[0124-distributed-tracing-for-tasks-and-pipelines.md].
+* Konflux ADR Doc: https://github.com/konflux-ci/architecture/blob/main/ADR/0033-enable-native-opentelemetry-tracing.md[0033-enable-native-opentelemetry-tracing.md].
+
+* Issue #5746: https://github.com/tektoncd/pipeline/pull/5746[(TEP-0124) implement opentelemetry Jaeger tracing] is the actual merge of the feature with the `OTEL_EXPORTER_JAEGER_ENDPOINT` env var.
+* Issue #7175: https://github.com/tektoncd/pipeline/issues/7175[Trace export to opentelemetry otlp/grpc endpoint] to move from Jaeger to OpenTelemetry implementation.
+* https://github.com/tektoncd/pipeline/blob/main/pkg/apis/config/tracing.go[Tekton Tracing Implementation]. 
+
+* The actual `Pipeline` API keeps info of the traces and spans in the CRs: https://tekton.dev/docs/pipelines/pipeline-api/
+
+* My issue: https://github.com/tektoncd/pipeline/issues/8535
+* Internal Tracing documentation for developers: https://github.com/tektoncd/pipeline/blob/main/docs/developers/tracing.md
+
+
+
+[source, text]
+----
+2025/01/28 12:34:18 traces export: failed to send to http://app-to-kafka-collector.otel.svc.cluster.local:14268/api/traces: 400 Bad Request
+2025/01/28 12:35:46 traces export: failed to send to http://app-to-kafka-collector.otel.svc.cluster.local:14268/v1/traces: 404 Not Found
+2025/01/28 14:41:34 traces export: Post "http://app-to-kafka-collector.otel.svc.cluster.local:14268/api/traces": dial tcp 172.30.38.178:14268: connect: connection refused
+
+
+----
 
 == Useful Tasks and Pipelines
 

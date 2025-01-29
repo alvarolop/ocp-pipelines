@@ -7,3 +7,6 @@ metadata:
     openshift.io/description: "Namespace to test pipelines"
     openshift.io/display-name: "OCP Pipelines"
     argocd.argoproj.io/sync-wave: "-05"
+    operator.tekton.dev/prune.schedule: "0 * * * *"
+    operator.tekton.dev/prune.keep: "10"
+    operator.tekton.dev/prune.resources: "taskrun, pipelinerun"
