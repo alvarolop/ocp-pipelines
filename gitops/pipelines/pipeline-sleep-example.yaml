@@ -8,15 +8,15 @@ spec:
     - name: step1-sleep-duration
       description: Sleep duration for step 1 (in seconds)
       type: string
-      default: 1
+      default: "1"
     - name: step2-sleep-duration
       description: Sleep duration for step 2 (in seconds)
       type: string
-      default: 1
+      default: "1"
     - name: step3-sleep-duration
       description: Sleep duration for step 3 (in seconds)
       type: string
-      default: 1
+      default: "1"
     # https://github.com/tektoncd/pipeline/pull/5746
     - name: OTEL_EXPORTER_JAEGER_ENDPOINT
       default: "http://app-to-kafka-collector.otel.svc.cluster.local:14268/api/traces"
