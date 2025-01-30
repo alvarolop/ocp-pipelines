@@ -13,8 +13,8 @@ spec:
       default: "1"
     - name: step2-force-failure
       description: Conditional to fail the task
-      type: boolean
-      default: true
+      type: string
+      default: "true"
   tasks:
     - name: step1
       taskRef:
