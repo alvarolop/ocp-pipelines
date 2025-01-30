@@ -12,10 +12,16 @@ configMapGenerator:
       disableNameSuffixHash: true
   - name: tekton-overview-dashboard
     files:
-      - dashboard.json=tekton-overview.json
+      - dashboard.json=16559-tekton-overview.json
+    options:
+      disableNameSuffixHash: true
+  - name: krci-tekton-overview-dashboard
+    files:
+      - dashboard.json=18321-krci-tekton-overview.json
     options:
       disableNameSuffixHash: true
 
 resources:
   - grafanadashboard-tekton-dashboard.yaml
   - grafanadashboard-tekton-overview.yaml
+  - grafanadashboard-krci-tekton-overview.yaml

@@ -196,9 +196,10 @@ For more information, you can access the https://access.redhat.com/documentation
 
 == Monitoring
 
-If you have Grafana installed in the cluster, you can create the following Dashboards to monitor the status of the pipeline's execution. There are two dashboards obtained from different sources:
+If you have Grafana installed in the cluster, you can create the following Dashboards to monitor the status of the pipeline's execution. There are three dashboards obtained from different sources:
 
-* `tekton-overview.json` from the https://grafana.com/grafana/dashboards/16559-tekton-overview[Grafana dashboards marketplace]. This chart tries to provide a full overview.
+* `16559-tekton-overview.json` from the https://grafana.com/grafana/dashboards/16559-tekton-overview[Grafana dashboards marketplace]. This chart tries to provide a full overview.
+* `18321-krci-tekton-overview.json` from the https://grafana.com/grafana/dashboards/18321-krci-tekton-overview[Grafana dashboards marketplace]. This chart tries to provide a full overview and is newer.
 * `tekton-dashboard.json` from the https://github.com/jenkins-x-charts/grafana-dashboard/blob/master/charts/grafana-dashboard/dashboards/tekton.json[jenkins-x-charts organization]. This chart is focused on TaskRuns and PipelineRuns.
 
 In general, Tekton has several relevant metrics. All of them are detailed https://tekton.dev/docs/pipelines/metrics[in the upstream documentation].
