@@ -3,9 +3,6 @@ kind: ConfigMap
 metadata:
   name: config-tracing
   namespace: openshift-pipelines
-  labels:
-    app.kubernetes.io/instance: default
-    app.kubernetes.io/part-of: tekton-pipelines
 data:
   _example: |
     ################################
@@ -32,4 +29,4 @@ data:
     credentialsSecret: "jaeger-creds"
   enabled: "true"
   # endpoint: "http://jaeger-collector.jaeger.svc.cluster.local:14268/api/traces"
-  endpoint: 'http://app-to-kafka-collector.otel.svc.cluster.local:14268/api/traces'
+  endpoint: 'http://app-to-kafka-collector.otel.svc.cluster.local:4318'
