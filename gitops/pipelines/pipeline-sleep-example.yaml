@@ -19,10 +19,6 @@ spec:
       description: Sleep duration for step 3 (in seconds)
       type: string
       default: "1"
-    # https://github.com/tektoncd/pipeline/pull/5746
-    - name: OTEL_EXPORTER_JAEGER_ENDPOINT
-      default: "http://app-to-kafka-collector.otel.svc.cluster.local:14268/api/traces"
-      type: string
   tasks:
     - name: step1
       taskRef:

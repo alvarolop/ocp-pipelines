@@ -1,0 +1,9 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: fail-pipeline-
+  namespace: ocp-pipelines
+spec:
+  pipelineRef:
+    name: fail-pipeline

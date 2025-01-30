@@ -8,6 +8,7 @@ resources:
   - task-buildah-with-entitlements.yaml
   - task-chmod.yaml
   - task-compose-repo-url.yaml
+  - task-conditional-fail.yaml
   - task-copy-secret.yaml
   - task-download-release.yaml
   - task-echo-json.yaml

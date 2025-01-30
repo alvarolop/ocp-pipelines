@@ -1,0 +1,18 @@
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: conditional-fail
+spec:
+  params:
+    - name: forceFailure
+      type: string
+      default: "true"
+  steps:
+    - name: check-failure-condition
+      image: registry.access.redhat.com/ubi8/ubi-minimal
+      script: |
+        if [ "$(params.forceFailure)" = "true" ]; then
+          echo "Triggering intentional failure"
+          exit 42
+        fi

@@ -1,0 +1,33 @@
+---
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: fail-pipeline
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
+spec:
+  params:
+    - name: step1-sleep-duration
+      description: Sleep duration for step 1 (in seconds)
+      type: string
+      default: "1"
+    - name: step2-force-failure
+      description: Conditional to fail the task
+      type: boolean
+      default: true
+  tasks:
+    - name: step1
+      taskRef:
+        name: sleep-task
+      params:
+        - name: sleep-duration
+          value: $(params.step1-sleep-duration)
+
+    - name: step2
+      taskRef:
+        name: conditional-fail
+      params:
+        - name: forceFailure
+          value: $(params.step2-force-failure)
+      runAfter:
+        - step1
