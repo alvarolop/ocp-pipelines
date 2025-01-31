@@ -33,6 +33,6 @@ spec:
               storage: 1Gi
           volumeMode: Filesystem
         status: {}
-    - name: docker-credentials
-      secret:
-        secretName: quay-alopezme-pull-secret
+    # - name: docker-credentials
+    #   secret:
+    #     secretName: quay-alopezme-pull-secret

@@ -13,6 +13,9 @@ namespace: ocp-pipelines
 resources:
   # Pipeline
   - pipeline-petclinic-deploy-dev.yaml
+
+  # Privileges workaround
+  - rb-scc-pipeline-privileged.yaml
   
   # Tasks
   - task-image-updater.yaml

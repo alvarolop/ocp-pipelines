@@ -30,7 +30,7 @@ spec:
           - name: name
             value: skopeo-copy
       workspaces:
-        - name: images-url
+        - name: images_url
           workspace: images-url
   workspaces:
     - name: images-url

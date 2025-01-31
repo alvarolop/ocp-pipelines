@@ -1,29 +1,26 @@
----
-apiVersion: tekton.dev/v1
-kind: PipelineRun
-metadata:
-  generateName: petclinic-deploy-run-
-  namespace: ocp-pipelines
-spec:
-  pipelineRef:
-    name: petclinic-deploy-dev
-  workspaces:
-  - name: app-source
-    persistentVolumeClaim:
-      claimName: app-source-pvc
-    # volumeClaimTemplate:
-    #   spec:
-    #     accessModes:
-    #       - ReadWriteOnce 
-    #     resources:
-    #       requests:
-    #         storage: 1Gi
-  - name: maven-settings
-    configMap:
-      name: maven-settings
-  - name: maven-cache
-    persistentVolumeClaim:
-      claimName: spring-petclinic-maven-cache-pvc
-  - name: docker-credentials
-    secret:
-      secretName: quay-alopezme-pull-secret
+# ---
+# apiVersion: tekton.dev/v1
+# kind: PipelineRun
+# metadata:
+#   generateName: petclinic-deploy-run-
+#   namespace: ocp-pipelines
+# spec:
+#   pipelineRef:
+#     name: petclinic-deploy-dev
+#   workspaces:
+#   - name: app-source
+#     persistentVolumeClaim:
+#       claimName: app-source-pvc
+#     # volumeClaimTemplate:
+#     #   spec:
+#     #     accessModes:
+#     #       - ReadWriteOnce 
+#     #     resources:
+#     #       requests:
+#     #         storage: 1Gi
+#   - name: maven-settings
+#     configMap:
+#       name: maven-settings
+#   - name: maven-cache
+#     persistentVolumeClaim:
+#       claimName: spring-petclinic-maven-cache-pvc

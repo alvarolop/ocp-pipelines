@@ -37,8 +37,11 @@ spec:
       params:
         - name: IMAGE
           value: $(params.image-name):$(params.image-tag)
+        # Reason: https://issues.redhat.com/browse/SRVKP-6938
         - name: CONTEXT
           value: $(params.git-context)
+        - name: DOCKERFILE
+          value: $(params.git-context)/Dockerfile
       runAfter:
         - git-clone
       taskRef:
@@ -49,8 +52,9 @@ spec:
       workspaces:
         - name: source
           workspace: git-repo
-        - name: dockerconfig
-          workspace: docker-credentials
+        # This only links one secret, but we need two. So we infer them from the SA
+        # - name: dockerconfig
+        #   workspace: docker-credentials
   workspaces:
     - name: git-repo
-    - name: docker-credentials
+    # - name: docker-credentials

@@ -39,15 +39,24 @@ spec:
           value: $(params.image-name):$(params.image-tag)
         - name: CONTEXT
           value: $(params.git-context)
+        - name: DOCKERFILE
+          value: $(params.git-context)/Dockerfile
       runAfter:
         - git-clone
       taskRef:
-        name: buildah-with-entitlements
+        resolver: cluster
+        params:
+          - name: name
+            value: buildah
       workspaces:
         - name: source
           workspace: git-repo
-        - name: dockerconfig
-          workspace: docker-credentials
+        # This only links one secret, but we need two. So we infer them from the SA
+        # - name: dockerconfig
+        #   workspace: docker-credentials
+        - name: rhel-entitlement  
+          workspace: rhel-entitlement
   workspaces:
     - name: git-repo
-    - name: docker-credentials
+    # - name: docker-credentials
+    - name: rhel-entitlement

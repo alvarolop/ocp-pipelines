@@ -33,6 +33,9 @@ spec:
               storage: 1Gi
           volumeMode: Filesystem
         status: {}
-    - name: docker-credentials
+    # - name: docker-credentials
+    #   secret:
+    #     secretName: quay-alopezme-pull-secret
+    - name: rhel-entitlement  
       secret:
-        secretName: quay-alopezme-pull-secret
+        secretName: etc-pki-entitlement

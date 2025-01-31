@@ -14,4 +14,3 @@ resources:
   - triggers
   - tekton-hub
   - spring-petclinic
-  - tekton-pipeline-example
