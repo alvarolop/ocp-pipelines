@@ -28,7 +28,7 @@ spec:
     - name: output
       workspace: shared-data
     params:
-    - name: url
+    - name: URL
       value: $(params.repo-url)
   - name: build-push
     runAfter: ["fetch-source"]
