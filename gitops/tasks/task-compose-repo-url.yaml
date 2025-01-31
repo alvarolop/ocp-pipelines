@@ -24,4 +24,4 @@ spec:
       image: image-registry.openshift-image-registry.svc:5000/openshift/cli
       script: |
         #!/bin/sh
-        echo "ssh://git@$(params.repository-server)/$(params.repository-workspace-name)/$(params.repository-name).git" | tee $(results.git-clone-url.path)
+        echo -n "ssh://git@$(params.repository-server)/$(params.repository-workspace-name)/$(params.repository-name).git" | tee $(results.git-clone-url.path)
