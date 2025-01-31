@@ -39,11 +39,11 @@ spec:
         - name: name
           value: git-clone
     params:
-    - name: url
+    - name: URL
       value: $(params.APP_GIT_URL)
-    - name: revision
+    - name: REVISION
       value: $(params.APP_GIT_REVISION)
-    - name: deleteExisting
+    - name: DELETE_EXISTING
       value: "true"
     workspaces:
     - name: output
