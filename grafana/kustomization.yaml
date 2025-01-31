@@ -20,8 +20,14 @@ configMapGenerator:
       - dashboard.json=18321-krci-tekton-overview.json
     options:
       disableNameSuffixHash: true
+  - name: alvaro-tekton-overview-dashboard
+    files:
+      - dashboard.json=alvaro-tekton-overview.json
+    options:
+      disableNameSuffixHash: true
 
 resources:
   - grafanadashboard-tekton-dashboard.yaml
   - grafanadashboard-tekton-overview.yaml
   - grafanadashboard-krci-tekton-overview.yaml
+  - grafanadashboard-alvaro-tekton-overview.yaml
