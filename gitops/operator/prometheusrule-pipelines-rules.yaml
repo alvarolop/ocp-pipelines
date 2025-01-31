@@ -1,0 +1,21 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: pipelines-rules
+  labels:
+    app: openshift-pipelines
+    openshift.io/prometheus-rule-evaluation-scope: leaf-prometheus
+spec:
+  groups:
+  - name: too-many-pipelines-failing
+    rules:
+    - alert: TooManyPipelinesFailing
+      annotations:
+        description: "A pipeline failure has been detected in the last minute. Pipeline: {{ $labels.pipeline }}, Namespace: {{ $labels.namespace }}, Pod: {{ $labels.pod }}"
+        summary: "Pipeline Failure Detected in {{ $labels.pipeline }}"
+      expr: 'increase(tekton_pipelines_controller_pipelinerun_duration_seconds_count{status="failed"}[1m]) > 0' 
+      for: 0m # alert fires immediately when the condition is met (no delay)
+      keep_firing_for: 1m
+      labels:
+        severity: critical

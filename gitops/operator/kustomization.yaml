@@ -11,3 +11,6 @@ resources:
 
   # Tekton Config
   - tektonconfig-config.yaml
+
+  # Alerting
+  - prometheusrule-pipelines-rules.yaml
