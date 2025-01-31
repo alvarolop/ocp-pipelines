@@ -1,5 +1,5 @@
 ---
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1
 kind: Pipeline
 metadata:
   name: clone-build-push
@@ -20,8 +20,10 @@ spec:
   tasks:
   - name: fetch-source
     taskRef:
-      kind: ClusterTask
-      name: git-clone
+      resolver: cluster
+      params:
+        - name: name
+          value: git-clone
     workspaces:
     - name: output
       workspace: shared-data

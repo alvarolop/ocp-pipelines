@@ -26,8 +26,10 @@ spec:
         - name: url
           value: $(params.git-repo)
       taskRef:
-        kind: ClusterTask
-        name: git-clone
+        resolver: cluster
+        params:
+          - name: name
+            value: git-clone
       workspaces:
         - name: output
           workspace: git-repo
@@ -40,8 +42,10 @@ spec:
       runAfter:
         - git-clone
       taskRef:
-        kind: ClusterTask
-        name: buildah
+        resolver: cluster
+        params:
+          - name: name
+            value: buildah
       workspaces:
         - name: source
           workspace: git-repo

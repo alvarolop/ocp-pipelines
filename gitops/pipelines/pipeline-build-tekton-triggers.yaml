@@ -77,8 +77,10 @@ spec:
         - name: revision
           value: $(params.branch-name)
       taskRef:
-        kind: ClusterTask
-        name: git-clone
+        resolver: cluster
+        params:
+          - name: name
+            value: git-clone
       runAfter:
         - echo-git-repo
       workspaces:
@@ -105,8 +107,10 @@ spec:
       runAfter:
         - extract-quay-env
       taskRef:
-        kind: ClusterTask
-        name: buildah
+        resolver: cluster
+        params:
+          - name: name
+            value: buildah
       workspaces:
         - name: source
           workspace: git-repo

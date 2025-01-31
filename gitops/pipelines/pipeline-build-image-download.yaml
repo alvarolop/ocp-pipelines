@@ -27,8 +27,10 @@ spec:
         - name: url
           value: $(params.git-repo)
       taskRef:
-        kind: ClusterTask
-        name: git-clone
+        resolver: cluster
+        params:
+          - name: name
+            value: git-clone
       workspaces:
         - name: output
           workspace: git-repo
