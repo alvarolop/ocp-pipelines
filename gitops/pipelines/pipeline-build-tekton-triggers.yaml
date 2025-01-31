@@ -72,9 +72,9 @@ spec:
 
     - name: git-clone
       params:
-        - name: url
+        - name: URL
           value: $(tasks.compose-repo-url.results.git-clone-url)
-        - name: revision
+        - name: REVISION
           value: $(params.branch-name)
       taskRef:
         resolver: cluster

@@ -16,13 +16,13 @@ spec:
   tasks:
     - name: skopeo-copy
       params:
-        - name: srcImageURL
+        - name: SOURCE_IMAGE_URL
           value: "docker://$(params.source-image)"
-        - name: destImageURL
+        - name: DESTINATION_IMAGE_URL
           value: "docker://$(params.destination-image)"
-        - name: srcTLSverify
+        - name: SRC_TLS_VERIFY
           value: 'true'
-        - name: destTLSverify
+        - name: DEST_TLS_VERIFY
           value: 'true'
       taskRef:
         resolver: cluster

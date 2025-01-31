@@ -24,7 +24,7 @@ spec:
 
     - name: git-clone
       params:
-        - name: url
+        - name: URL
           value: $(params.git-repo)
       taskRef:
         resolver: cluster
