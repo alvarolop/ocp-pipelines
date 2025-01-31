@@ -8,3 +8,6 @@ resources:
 
   # Enable Tracing
   - cm-config-tracing.yaml
+
+  # Tekton Config
+  - tektonconfig-config.yaml
