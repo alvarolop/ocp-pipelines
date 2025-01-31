@@ -1,8 +1,9 @@
 ---
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
   generateName: petclinic-deploy-run-
+  namespace: ocp-pipelines
 spec:
   pipelineRef:
     name: petclinic-deploy-dev

@@ -1,14 +1,12 @@
 ---
-apiVersion: tekton.dev/v1beta1
+apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
   generateName: clone-build-push-run-
+  namespace: ocp-pipelines
 spec:
   pipelineRef:
     name: clone-build-push
-  podTemplate:
-    securityContext:
-      fsGroup: 65532
   workspaces:
   - name: shared-data
     volumeClaimTemplate:
