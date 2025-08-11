@@ -106,7 +106,7 @@ spec:
       scc:
         default: pipelines-scc
   profile: all
-  tektonpruner:
+  pruner:
     disabled: false
     keep: 100
     resources:
