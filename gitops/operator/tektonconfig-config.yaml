@@ -15,6 +15,8 @@ spec:
       value: "true"
     - name: resolverStepActions
       value: "true"
+    - name: communityResolverTasks
+      value: 'true'
   chain:
     artifacts.oci.format: simplesigning
     artifacts.oci.storage: oci
