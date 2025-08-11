@@ -3,6 +3,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   name: pipelines-rules
+  namespace: openshift-pipelines
   labels:
     app: openshift-pipelines
     openshift.io/prometheus-rule-evaluation-scope: leaf-prometheus
