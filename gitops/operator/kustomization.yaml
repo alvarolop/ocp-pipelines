@@ -6,8 +6,8 @@ resources:
   - sub-openshift-pipelines-operator.yaml
   - manual-approval-gate.yaml
 
-  # Enable Tracing
-  - cm-config-tracing.yaml
+  # # Enable Tracing
+  # - cm-config-tracing.yaml
 
   # Tekton Config
   - tektonconfig-config.yaml

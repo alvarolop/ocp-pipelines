@@ -7,10 +7,6 @@ metadata:
 spec:
   addon:
     params:
-    - name: clusterTasks
-      value: "true"
-    - name: communityClusterTasks
-      value: "true"
     - name: pipelineTemplates
       value: "true"
     - name: resolverTasks
@@ -54,7 +50,6 @@ spec:
     enable-hub-resolver: true
     enable-param-enum: false
     enable-provenance-in-status: true
-    enable-step-actions: true
     enforce-nonfalsifiability: none
     keep-pod-on-cancel: false
     max-result-size: 4096
@@ -100,7 +95,7 @@ spec:
           hub-catalog-name: tekton
           hub-url: https://api.hub.tekton.dev/v1
           max-keep-run-upper-limit: "0"
-          remember-ok-to-test: "true"
+          remember-ok-to-test: "false"
           remote-tasks: "true"
           secret-auto-create: "true"
           secret-github-app-scope-extra-repos: ""
@@ -109,7 +104,7 @@ spec:
       scc:
         default: pipelines-scc
   profile: all
-  pruner:
+  tektonpruner:
     disabled: false
     keep: 100
     resources:
